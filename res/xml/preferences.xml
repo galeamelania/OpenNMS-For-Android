@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" android:orderingFromXml="true" android:title="@string/prefsScreenTitle">
+    <EditTextPreference android:title="@string/prefsOnmsHost" android:key="onms.host" android:enabled="true" android:selectable="true" android:summary="@string/prefsOnmsHostDialogMessage"/>
+    <CheckBoxPreference android:defaultValue="false" android:enabled="true" android:key="onms.use_ssl" android:title="@string/prefsUserSslTitle" android:selectable="true" android:summary="@string/prefsUseSslSummary"/>
+    <EditTextPreference android:title="@string/prefsPortTitle" android:key="onms.port" android:summary="@string/prefsPortSummary" />
+    <EditTextPreference android:title="@string/prefsUsernameTitle" android:key="onms.username" android:summary="@string/prefsUsernameSummary"/>
+    <EditTextPreference android:title="@string/prefsPasswordTitle" android:key="onms.password" android:summary="@string/prefsPasswordSummary"/>
+    <EditTextPreference android:title="@string/prefsOnmsAppPathTitle" android:key="onms.app_path" android:summary="@string/prefsOnmsAppPathSummary" android:defaultValue="@string/prefsOnmsDefaultPath"/>
+</PreferenceScreen>

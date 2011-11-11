@@ -12,6 +12,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -73,5 +75,23 @@ public class OpenNMSActivity extends Activity {
 			}
         	
 		}) ;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+    	MenuItem settings = menu.add(Menu.NONE, 0, 0, "Preferences") ;
+    	settings.setIcon(android.R.drawable.ic_menu_preferences) ;
+    	return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	switch (item.getItemId()) {
+	    	case 0: 
+	    		startActivity(new Intent(this, ConfigurationActivity.class)) ;
+	    		return true ;
+    	}
+
+    	return false ;
     }
 }

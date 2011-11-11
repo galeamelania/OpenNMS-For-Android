@@ -19,6 +19,7 @@
         <activity android:name=".activities.EventsActivity"></activity>
         <activity android:name=".activities.AcknowledgmentsActivity"></activity>
         <activity android:name=".activities.NodesActivity"></activity>
+        <activity android:name="ConfigurationActivity" android:screenOrientation="portrait" android:launchMode="singleInstance"></activity>
 
     </application>
 </manifest>

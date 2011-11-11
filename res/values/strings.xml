@@ -8,4 +8,18 @@
     <string name="unkMenuOptionAlertTitle">Unknown Menu Option</string>
     <string name="unkMenuOptionMsg">The menu option ||REPLACE|| was not understood.</string>
     <string name="ok">OK</string>
+    <string name="prefsOnmsHost">OpenNMS Host:</string>
+    <string name="prefsOnmsHostDialogMessage">Enter the host name or IP address of your OpenNMS web server</string>
+    <string name="prefsUserSslTitle">Use SSL?</string>
+    <string name="prefsUseSslSummary">Check this box if the application should communicate with the OpenNMS server via SSL/HTTPS</string>
+    <string name="prefsPortTitle">Server Port:</string>
+    <string name="prefsPortSummary">Enter the port number which should be used to connect to the OpenNMS web server or leave blank to use the default</string>
+    <string name="prefsUsernameTitle">Username:</string>
+    <string name="prefsUsernameSummary">Enter the user ID with which you log on to OpenNMS</string>
+    <string name="prefsPasswordTitle">Password:</string>
+    <string name="prefsPasswordSummary">Enter your password for the OpenNMS web interface</string>
+    <string name="prefsOnmsAppPathTitle">OpenNMS Application Path:</string>
+    <string name="prefsOnmsAppPathSummary">The path to the OpenNMS application on the web server (Typically \'/opennms\')</string>
+    <string name="prefsOnmsDefaultPath">/opennms</string>
+    <string name="prefsScreenTitle">OpenNMS Preferences</string>
 </resources>
