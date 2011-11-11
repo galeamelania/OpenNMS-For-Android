@@ -5,7 +5,7 @@
       android:versionName="1.0">
     <uses-sdk android:minSdkVersion="4" />
 
-    <application android:icon="@drawable/icon" android:label="@string/app_name">
+    <application android:icon="@drawable/icon" android:label="@string/app_name" android:theme="@android:style/Theme.Light.NoTitleBar">
         <activity android:name=".OpenNMSActivity"
                   android:label="@string/app_name">
             <intent-filter>
@@ -13,6 +13,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:enabled="true" android:windowSoftInputMode="stateHidden" android:screenOrientation="sensor" android:name=".activities.OutagesActivity" android:launchMode="singleInstance"></activity>
+        <activity android:name=".activities.AlarmsActivity"></activity>
+        <activity android:name=".activities.NotificationsActivity"></activity>
+        <activity android:name=".activities.EventsActivity"></activity>
+        <activity android:name=".activities.AcknowledgmentsActivity"></activity>
+        <activity android:name=".activities.NodesActivity"></activity>
 
     </application>
 </manifest>

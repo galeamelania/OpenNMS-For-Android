@@ -5,4 +5,7 @@
     <string name="Alerts">alerts.header</string>
     <string name="alerts_header">Alerts</string>
     <string name="outages_header">Outages</string>
+    <string name="unkMenuOptionAlertTitle">Unknown Menu Option</string>
+    <string name="unkMenuOptionMsg">The menu option ||REPLACE|| was not understood.</string>
+    <string name="ok">OK</string>
 </resources>
