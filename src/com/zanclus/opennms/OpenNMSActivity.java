@@ -11,7 +11,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +30,15 @@ public class OpenNMSActivity extends Activity {
         StateSingleton.getInstance(this) ;
 
         setContentView(R.layout.main);
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this) ;
+        if (sp.getString("onms.host", "").contentEquals("") || 
+        		sp.getString("onms.username","").contentEquals("") ||
+        		sp.getString("onms.password", "").contentEquals("") ||
+        		sp.getString("onms.port","").contentEquals("") ||
+        		sp.getString("onms.app_path","").contentEquals("")) {
+        	startActivity(new Intent(this, ConfigurationActivity.class)) ;
+        }
 
         ListView mainMenuList = (ListView) findViewById(R.id.mainMenu) ;
         mainMenuList.setOnItemClickListener(new ListView.OnItemClickListener() {
@@ -93,5 +104,19 @@ public class OpenNMSActivity extends Activity {
     	}
 
     	return false ;
+    }
+
+    @Override
+    protected void onResume() {
+    	super.onResume();
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this) ;
+        if (sp.getString("onms.host", "").contentEquals("") || 
+        		sp.getString("onms.username","").contentEquals("") ||
+        		sp.getString("onms.password", "").contentEquals("") ||
+        		sp.getString("onms.port","").contentEquals("") ||
+        		sp.getString("onms.app_path","").contentEquals("")) {
+        	startActivity(new Intent(this, ConfigurationActivity.class)) ;
+        }
     }
 }

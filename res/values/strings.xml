@@ -6,7 +6,7 @@
     <string name="alerts_header">Alerts</string>
     <string name="outages_header">Outages</string>
     <string name="unkMenuOptionAlertTitle">Unknown Menu Option</string>
-    <string name="unkMenuOptionMsg">The menu option ||REPLACE|| was not understood.</string>
+    <string name="unkMenuOptionMsg">The menu option REPLACE was not understood.</string>
     <string name="ok">OK</string>
     <string name="prefsOnmsHost">OpenNMS Host:</string>
     <string name="prefsOnmsHostDialogMessage">Enter the host name or IP address of your OpenNMS web server</string>
@@ -22,4 +22,6 @@
     <string name="prefsOnmsAppPathSummary">The path to the OpenNMS application on the web server (Typically \'/opennms\')</string>
     <string name="prefsOnmsDefaultPath">/opennms</string>
     <string name="prefsScreenTitle">OpenNMS Preferences</string>
+    <string name="prefsInvalidPortTitle">Invalid Server Port</string>
+    <string name="prefsInvalidPortMessage">The value &quot;REPLACE&quot; is not a number between 1 and 65535, and it must be!</string>
 </resources>

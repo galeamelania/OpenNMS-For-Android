@@ -6,6 +6,9 @@ package com.zanclus.opennms;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.util.Log;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
@@ -44,7 +47,33 @@ public class ConfigurationActivity extends PreferenceActivity implements OnShare
 		} else {
 			sslDefaultPort = 80 ;
 		}
-		String portString = sp.getString("onms.port", sslDefaultPort+"")+"" ;
+		if (sp.getString("onms.port", "").contentEquals("")) {
+			sp.edit().putString("onms.port", sslDefaultPort+"").commit() ;
+		} else {
+			try {
+				sslDefaultPort = Integer.parseInt(sp.getString("onms.port", sslDefaultPort+"")) ;
+			} catch (NumberFormatException nfe) {
+				Log.e("ConfigurationActivity", getResources().getString(R.string.prefsInvalidPortMessage)) ;
+				if (sp.getBoolean("onms.use_ssl", false)) {
+					sslDefaultPort = 443 ;
+				} else {
+					sslDefaultPort = 80 ;
+				}
+				AlertDialog.Builder builder = new AlertDialog.Builder(this) ;
+				builder.setTitle(R.string.prefsInvalidPortTitle) ;
+				builder.setMessage(getResources().getString(R.string.prefsInvalidPortMessage).replaceAll("REPLACE", sp.getString("onms.port",""))) ;
+				builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss() ;
+					}
+				}) ;
+				builder.show() ;
+				sp.edit().putString("onms.port", sslDefaultPort+"").commit() ;
+			}
+		}
+		String portString = sp.getString("onms.port", sslDefaultPort+"") ;
 		onmsPort.setSummary(portString);
 	}
 
@@ -75,6 +104,31 @@ public class ConfigurationActivity extends PreferenceActivity implements OnShare
 				}
 				if (sharedPreferences.getString("onms.port", "0").contentEquals("0")) {
 					sharedPreferences.edit().putString("onms.port", sslDefaultPort).commit() ;
+				}
+			} else if (pref.getKey().contentEquals("onms.port")) {
+				try {
+					Integer.parseInt(etp.getText()) ;
+					pref.setSummary(etp.getText()) ;
+				} catch (NumberFormatException nfe) {
+					Log.e("ConfigurationActivity", getResources().getString(R.string.prefsInvalidPortMessage)) ;
+					AlertDialog.Builder builder = new AlertDialog.Builder(this) ;
+					builder.setTitle(R.string.prefsInvalidPortTitle) ;
+					builder.setMessage(getResources().getString(R.string.prefsInvalidPortMessage).replaceAll("REPLACE", etp.getText())) ;
+					String sslDefaultPort = "0" ;
+					builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+						
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.dismiss() ;
+						}
+					}) ;
+					builder.show() ;
+					if (sharedPreferences.getBoolean("onms.use_ssl", false)) {
+						sslDefaultPort = "443" ;
+					} else {
+						sslDefaultPort = "80" ;
+					}
+					sharedPreferences.edit().putString("onms.port", sslDefaultPort+"").commit() ;
 				}
 			} else {
 				pref.setSummary(etp.getText()) ;

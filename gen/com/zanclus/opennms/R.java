@@ -43,6 +43,8 @@ public final class R {
         public static final int hello=0x7f070000;
         public static final int ok=0x7f070007;
         public static final int outages_header=0x7f070004;
+        public static final int prefsInvalidPortMessage=0x7f070017;
+        public static final int prefsInvalidPortTitle=0x7f070016;
         public static final int prefsOnmsAppPathSummary=0x7f070013;
         public static final int prefsOnmsAppPathTitle=0x7f070012;
         public static final int prefsOnmsDefaultPath=0x7f070014;
