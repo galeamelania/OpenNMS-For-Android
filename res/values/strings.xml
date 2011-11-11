@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, OpenNMSActivity!</string>
+    <string name="app_name">OpenNMS</string>
+    <string name="Alerts">alerts.header</string>
+    <string name="alerts_header">Alerts</string>
+    <string name="outages_header">Outages</string>
+</resources>

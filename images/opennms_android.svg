@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.47 r22583"
+   sodipodi:docname="opennms_android.svg">
+  <defs
+     id="defs4">
+    <linearGradient
+       id="linearGradient3771">
+      <stop
+         style="stop-color:#0000ff;stop-opacity:1;"
+         offset="0"
+         id="stop3773" />
+      <stop
+         id="stop3779"
+         offset="0.88"
+         style="stop-color:#0000ff;stop-opacity:1;" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:0;"
+         offset="1"
+         id="stop3775" />
+    </linearGradient>
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       id="perspective10" />
+    <inkscape:perspective
+       id="perspective2902"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <filter
+       inkscape:collect="always"
+       id="filter3957">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="3.4937896"
+         id="feGaussianBlur3959" />
+    </filter>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#000000"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="1"
+     inkscape:pageshadow="2"
+     inkscape:zoom="2.8"
+     inkscape:cx="166.75259"
+     inkscape:cy="139.83893"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:window-width="1680"
+     inkscape:window-height="979"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="1">
+    <sodipodi:guide
+       orientation="1,0"
+       position="177.14286,966.78572"
+       id="guide3758" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="308.92857,957.14286"
+       id="guide3760" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g3961"
+       transform="translate(145.41932,-61.428572)"
+       inkscape:export-filename="/home/dphillips/Development/Android/OpenNMS/res/drawable-ldpi/icon.png"
+       inkscape:export-xdpi="21.576384"
+       inkscape:export-ydpi="21.576384">
+      <rect
+         transform="matrix(1.2879376,0,0,1.2879376,-21.609853,-281.41925)"
+         rx="22.528811"
+         ry="24.148542"
+         y="927.45093"
+         x="25.139212"
+         height="99.822563"
+         width="99.822556"
+         id="rect3756"
+         style="fill:#ffffff;fill-opacity:1;stroke:none;filter:url(#filter3957)" />
+      <g
+         transform="matrix(1.0018904,0,0,1.1416008,-168.80214,791.60167)"
+         id="g3762">
+        <path
+           style="fill:#00ff00;stroke:none"
+           d="m 205,204.50504 c 0,0 -99.3487,-140.431286 101.42858,-72.85714 C 147.14286,92.362183 205,204.50504 205,204.50504 z"
+           id="path2908"
+           sodipodi:nodetypes="ccc" />
+        <flowRoot
+           xml:space="preserve"
+           id="flowRoot3682"
+           style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Liberation Sans;-inkscape-font-specification:Liberation Sans"
+           transform="translate(-3.5714286,-12.857143)"><flowRegion
+             id="flowRegion3684"><rect
+               id="rect3686"
+               width="108.57144"
+               height="44.285702"
+               x="202.14285"
+               y="145.93361"
+               style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Liberation Sans;-inkscape-font-specification:Liberation Sans" /></flowRegion><flowPara
+             id="flowPara3688"
+             style="font-size:40px;font-weight:bold;-inkscape-font-specification:Andale Mono Bold">onms</flowPara></flowRoot>        <text
+           xml:space="preserve"
+           style="font-size:16.6736393px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+           x="149.25165"
+           y="244.34547"
+           id="text3690"
+           sodipodi:linespacing="125%"
+           transform="scale(1.3352329,0.74893301)"><tspan
+             sodipodi:role="line"
+             id="tspan3692"
+             x="149.25165"
+             y="244.34547">ANDROID</tspan></text>
+      </g>
+    </g>
+  </g>
+</svg>
