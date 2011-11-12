@@ -1,12 +1,9 @@
 package com.zanclus.opennms;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
+import com.thoughtworks.xstream.XStreamException;
 import com.zanclus.opennms.activities.AcknowledgmentsActivity;
 import com.zanclus.opennms.activities.AlarmsActivity;
 import com.zanclus.opennms.activities.EventsActivity;
@@ -15,6 +12,8 @@ import com.zanclus.opennms.activities.NotificationsActivity;
 import com.zanclus.opennms.activities.OutagesActivity;
 import com.zanclus.opennms.adapters.MainMenuListAdapter;
 import com.zanclus.opennms.api.Outages;
+import com.zanclus.opennms.data.entities.OnmsEvent;
+import com.zanclus.opennms.data.entities.OnmsOutage;
 import com.zanclus.opennms.data.entities.OnmsOutageCollection;
 import com.zanclus.opennms.util.StateSingleton;
 import android.app.Activity;
@@ -109,11 +108,19 @@ public class OpenNMSActivity extends Activity {
         	public void onSuccess(String content) {
         		super.onSuccess(content);
         		//TODO Use xstream to parse result
-        		XStream xstream = new XStream(new JettisonMappedXmlDriver()) ;
-        		OnmsOutageCollection outages = (OnmsOutageCollection) xstream.fromXML(content) ;
-        		TextView outageCountView = (TextView) ((RelativeLayout) ((ListView) findViewById(R.id.mainMenu)).getChildAt(0)).getChildAt(2) ;
+        		XStream xstream = new XStream() ;
+        		xstream.alias("outages", OnmsOutageCollection.class) ;
+        		xstream.alias("outage", OnmsOutage.class) ;
+        		xstream.alias("serviceLostEvent", OnmsEvent.class) ;
+        		OnmsOutageCollection outages ;
+        		try {
+        			outages = (OnmsOutageCollection) xstream.fromXML(content) ;
+            		TextView outageCountView = (TextView) ((RelativeLayout) ((ListView) findViewById(R.id.mainMenu)).getChildAt(0)).getChildAt(2) ;
+            		outageCountView.setText(outages.getCount()) ;
+        		} catch (XStreamException xse) {
+        			Log.e("ResumeOutageCount","XStream parsing error\n",xse) ;
+        		}
         		ProgressBar progBar = (ProgressBar) ((RelativeLayout) ((ListView) findViewById(R.id.mainMenu)).getChildAt(0)).getChildAt(1) ;
-        		outageCountView.setText(outages.getCount()) ;
         		progBar.setVisibility(View.INVISIBLE) ;
         	}
 
@@ -164,11 +171,19 @@ public class OpenNMSActivity extends Activity {
         	public void onSuccess(String content) {
         		super.onSuccess(content);
         		//TODO Use xstream to parse result
-        		XStream xstream = new XStream(new JettisonMappedXmlDriver()) ;
-        		OnmsOutageCollection outages = (OnmsOutageCollection) xstream.fromXML(content) ;
-        		TextView outageCountView = (TextView) ((RelativeLayout) ((ListView) findViewById(R.id.mainMenu)).getChildAt(0)).getChildAt(2) ;
+        		XStream xstream = new XStream() ;
+        		xstream.alias("outages", OnmsOutageCollection.class) ;
+        		xstream.alias("outage", OnmsOutage.class) ;
+        		xstream.alias("serviceLostEvent", OnmsEvent.class) ;
+        		OnmsOutageCollection outages ;
+        		try {
+        			outages = (OnmsOutageCollection) xstream.fromXML(content) ;
+            		TextView outageCountView = (TextView) ((RelativeLayout) ((ListView) findViewById(R.id.mainMenu)).getChildAt(0)).getChildAt(2) ;
+            		outageCountView.setText(outages.getCount()) ;
+        		} catch (XStreamException xse) {
+        			Log.e("ResumeOutageCount","XStream parsing error\n",xse) ;
+        		}
         		ProgressBar progBar = (ProgressBar) ((RelativeLayout) ((ListView) findViewById(R.id.mainMenu)).getChildAt(0)).getChildAt(1) ;
-        		outageCountView.setText(outages.getCount()) ;
         		progBar.setVisibility(View.INVISIBLE) ;
         	}
 

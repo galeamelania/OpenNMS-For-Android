@@ -21,7 +21,7 @@ public final class RestClient {
 		String authString = Base64.encodeToString((new String(prefs.getString("onms.username", "admin")+":"+prefs.getString("onms.password", "admin")).getBytes()), Base64.DEFAULT) ;
 		Log.d("GET_REQUEST","AuthString: "+authString) ;
 		client.addHeader("Authorization", "Basic "+authString) ;
-		client.addHeader("Accept", "application/json") ;
+//		client.addHeader("Accept", "application/json") ;
 		String protocol = prefs.getBoolean("onms.use_ssl", false)?"https":"http" ;
 		String onmsBaseURL = protocol+"://"+prefs.getString("onms.host", "localhost")+":"+prefs.getString("onms.port","80")+"/opennms/rest" ;
 		Log.d("GET_REQUEST","BaseURL: "+onmsBaseURL) ;
@@ -40,7 +40,7 @@ public final class RestClient {
 		String authString = Base64.encodeToString((new String(prefs.getString("onms.username", "admin")+":"+prefs.getString("onms.password", "admin")).getBytes()), Base64.DEFAULT) ;
 		Log.d("GET_REQUEST","AuthString: "+authString) ;
 		client.addHeader("Authorization", "Basic "+authString) ;
-		client.addHeader("Accept", "application/json") ;
+//		client.addHeader("Accept", "application/json") ;
 		String protocol = prefs.getBoolean("onms.use_ssl", false)?"https":"http" ;
 		String onmsBaseURL = protocol+"://"+prefs.getString("onms.host", "localhost")+":"+prefs.getString("onms.port","80")+"/opennms/rest" ;
 		client.post(onmsBaseURL+requestString, params, callback) ;
@@ -58,7 +58,7 @@ public final class RestClient {
 		String authString = Base64.encodeToString((new String(prefs.getString("onms.username", "admin")+":"+prefs.getString("onms.password", "admin")).getBytes()), Base64.DEFAULT) ;
 		Log.d("GET_REQUEST","AuthString: "+authString) ;
 		client.addHeader("Authorization", "Basic "+authString) ;
-		client.addHeader("Accept", "application/json") ;
+//		client.addHeader("Accept", "application/json") ;
 		String protocol = prefs.getBoolean("onms.use_ssl", false)?"https":"http" ;
 		String onmsBaseURL = protocol+"://"+prefs.getString("onms.host", "localhost")+":"+prefs.getString("onms.port","80")+"/opennms/rest" ;
 		client.put(onmsBaseURL+requestString, params, callback) ;
@@ -75,7 +75,7 @@ public final class RestClient {
 		String authString = Base64.encodeToString((new String(prefs.getString("onms.username", "admin")+":"+prefs.getString("onms.password", "admin")).getBytes()), Base64.DEFAULT) ;
 		Log.d("GET_REQUEST","AuthString: "+authString) ;
 		client.addHeader("Authorization", "Basic "+authString) ;
-		client.addHeader("Accept", "application/json") ;
+//		client.addHeader("Accept", "application/json") ;
 		String protocol = prefs.getBoolean("onms.use_ssl", false)?"https":"http" ;
 		String onmsBaseURL = protocol+"://"+prefs.getString("onms.host", "localhost")+":"+prefs.getString("onms.port","80")+"/opennms/rest" ;
 		client.delete(onmsBaseURL+requestString, callback) ;
