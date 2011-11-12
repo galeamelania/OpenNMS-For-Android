@@ -10,6 +10,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQuery;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.util.Log;
 
 public class ONMSDataAdapter {
@@ -287,7 +289,26 @@ public class ONMSDataAdapter {
 	 * @param ipIface A {@link JSONObject} containing details about a single IP interface
 	 */
 	public void updateIpInterface(JSONObject ipIface) {
-		//TODO: Stub Method
+		if (ipIface.has("@id")) {
+			try {
+				ContentValues ipIfValues = new ContentValues() ;
+				ipIfValues.put("id", ipIface.getInt("@id")) ;
+				ipIfValues.put("nodeid", ipIface.has("nodeId")?ipIface.getInt("nodeId"):0) ;
+				ipIfValues.put("ipaddress", ipIface.has("ipAddress")?ipIface.getString("ipAddress"):null) ;
+				Date lastPoll = null ;
+				if (ipIface.has("lastCapsdPoll")) {
+					lastPoll = new Date(ipIface.getString("lastCapsdPoll")) ;
+				} else {
+					lastPoll = new Date(0) ;
+				}
+				ipIfValues.put("lastpoll", lastPoll.getTime()) ;
+				if (db.insertWithOnConflict("ipinterface", null, ipIfValues, SQLiteDatabase.CONFLICT_REPLACE)<0) {
+					Log.e("ONMSDataAdapter","Failed to update IP interface with data: \n"+ipIface.toString(4)) ;
+				}
+			} catch (JSONException jsone) {
+				Log.e("ONMSDataAdapter","JSONException occurred while trying to update IP interface data.", jsone) ;
+			}
+		}
 	}
 
 	/**
@@ -296,7 +317,12 @@ public class ONMSDataAdapter {
 	 * @return A {@link JSONArray} containing the details about the node's IP interfaces
 	 */
 	public JSONArray getIpInterfacesForNode(long nodeId) {
-		//TODO: Stub Method
+		JSONArray ipInterfaces = new JSONArray() ;
+		SQLiteQueryBuilder builder = new SQLiteQueryBuilder() ;
+		builder.appendWhere("nodeid='"+nodeId+"'") ;
+		builder.setTables("ipinterface") ;
+		builder.setTables("ipinterface") ;
+		//TODO Stub method in progress
 		return null ;
 	}
 
