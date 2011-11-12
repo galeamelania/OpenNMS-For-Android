@@ -11,9 +11,10 @@
         <EditTextPreference android:summary="The time, in seconds, between checks for updates" android:title="Polling Interval" android:key="onms.poller.interval"/>
     </PreferenceCategory>
     <PreferenceCategory android:summary="Configure how much historical data to store on your device" android:key="onms.database.prefs" android:title="Storage Preferences">
-        <EditTextPreference android:title="Event Backlog" android:key="onms.database.events.store" android:summary="Number of events to store locally"/>
+        <CheckBoxPreference android:title="Store database on SD Card?" android:summary="If enabled, the data will be stored on the SD Card instead of on the internal storage" android:key="onms.database.location" /><EditTextPreference android:title="Event Backlog" android:key="onms.database.events.store" android:summary="Number of events to store locally"/>
         <EditTextPreference android:key="onms.database.outages.store" android:title="Outages Backlog" android:summary="Number of recovered outages to store locally"/>
         <EditTextPreference android:key="onms.database.alarms.store" android:title="Alarms Backlog" android:summary="Number of acknowledged alarms to store locally"/>
         <EditTextPreference android:title="Notifications Backlog" android:key="onms.database.notifications.store" android:summary="Number of acknowledged notices to store locally"/>
+        
     </PreferenceCategory>
 </PreferenceScreen>

@@ -337,4 +337,54 @@ public class ONMSDataAdapter {
 		//TODO: Stub Method
 		return null ;
 	}
+
+	/**
+	 * Store the events contained in the {@link JSONObject} events
+	 * @param events A {@link JSONObject} containing details about events from OpenNMS
+	 */
+	public void loadEvents(JSONObject eventData) {
+		try {
+			if (eventData.has("event")) {
+				JSONArray events = eventData.getJSONArray("event") ;
+				int eventCount = events.length() ;
+				for (int x=0; x<eventCount; x++) {
+					JSONObject event = events.getJSONObject(x) ;
+					if (event.has("@id")) {
+						ContentValues values = new ContentValues() ;
+						values.put("id", event.getInt("@id")) ;
+						Date createTime ;
+						if (event.has("createTime")) {
+							createTime = new Date(event.getString("createTime")) ;
+						} else {
+							createTime = new Date(0) ;
+						}
+						values.put("createtime", createTime.getTime()) ;
+						values.put("description", event.has("description")?event.getString("description"):null) ;
+						values.put("nmshost", event.has("host")?event.getString("host"):null) ;
+						values.put("logmessage", event.has("logMessage")?event.getString("logMessage"):null) ;
+						values.put("source", event.has("source")?event.getString("source"):null) ;
+						Date eventTime ;
+						if (event.has("time")) {
+							eventTime = new Date(event.getString("createTime")) ;
+						} else {
+							eventTime = new Date(0) ;
+						}
+						values.put("time", eventTime.getTime()) ;
+						values.put("uei", event.has("uei")?event.getString("uei"):null) ;
+						values.put("parms", event.has("parms")?event.getString("parms"):null) ;
+						values.put("severity", event.has("@severity")?event.getString("@severity"):null) ;
+						values.put("ipaddress", event.has("ipAddress")?event.getString("ipAddress"):null) ;
+						values.put("nodeid", event.has("")?event.getString(""):null) ;
+						if (db.insertWithOnConflict("events", null, values, SQLiteDatabase.CONFLICT_REPLACE)<0) {
+							Log.e("ONMSDataAdapter","Failed to add event with data: \n"+event.toString(4)) ;
+						}
+					}
+				}
+			}
+		} catch (JSONException jsone) {
+			Log.e("ONMSDataAdapter","JSONException occurred while trying to import event data.", jsone) ;
+		}
+	}
+
+	
 }

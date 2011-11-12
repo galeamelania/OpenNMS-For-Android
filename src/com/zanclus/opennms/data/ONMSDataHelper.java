@@ -110,6 +110,8 @@ public class ONMSDataHelper extends SQLiteOpenHelper {
 				"time integer," +
 				"uei text," +
 				"ipaddress text," +
+				"severity text," +
+				"parms text," +
 				"nodeid integer" +
 			") ;") ;
 		
