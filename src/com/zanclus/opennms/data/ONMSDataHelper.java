@@ -2,18 +2,15 @@ package com.zanclus.opennms.data;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class ONMSDataHelper extends SQLiteOpenHelper {
 
 	private static final String DATABASE_NAME = "opennms" ;
 	private static final int DATABASE_VERSION = 1 ;
-	private Context ctx ;
 
 	public ONMSDataHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION) ;
-		ctx = context ;
 	}
 
 	@Override
@@ -23,15 +20,12 @@ public class ONMSDataHelper extends SQLiteOpenHelper {
 				"nodelabel text," +
 				"foreignsource text," +
 				"foreignid integer," +
-				"lastpoll integer," +
-				"category integer" +
+				"lastpoll integer" +
 			");") ;
 		db.execSQL("CREATE TABLE ipinterface (" +
 				"id integer primary key," +
+				"ipaddress TEXT,"+
 				"nodeid integer not null," +
-				"name text," +
-				"netmask integer," +
-				"madaddr text," +
 				"lastpoll integer" +
 			");") ;
 		db.execSQL("CREATE TABLE interface_services (" +
@@ -48,7 +42,7 @@ public class ONMSDataHelper extends SQLiteOpenHelper {
 				"ifindex integer not null," +
 				"name text," +
 				"speed integer," +
-				"ipaddress integer," +
+				"ipaddress text," +
 				"macaddr text" +
 			") ;") ;
 		db.execSQL("CREATE TABLE categories (" +
@@ -111,7 +105,7 @@ public class ONMSDataHelper extends SQLiteOpenHelper {
 				"source text," +
 				"time integer," +
 				"uei text," +
-				"ipaddress integer," +
+				"ipaddress text," +
 				"nodeid integer" +
 			") ;") ;
 		
@@ -161,6 +155,27 @@ public class ONMSDataHelper extends SQLiteOpenHelper {
 				"serviceid integer," +
 				"servicelostevent integer," +
 				"regainedevent integer" +
+			") ;") ;
+		
+		db.execSQL("CREATE TABLE snmpinterfaces (" +
+				"id integer primary key," +
+				"poll text," +
+				"pollflag text," +
+				"ifindex integer," +
+				"collect text," +
+				"collectflag text," +
+				"ifadminstatus integer," +
+				"ifalias text," +
+				"ifdesc text," +
+				"ifname text," +
+				"ifoperstatus integer," +
+				"ifspeed integer," +
+				"iftype integer," +
+				"ipinterface integer," +
+				"lastpoll integer," +
+				"netmask text," +
+				"nodeid integer," +
+				"macaddress text" +
 			") ;") ;
 	}
 

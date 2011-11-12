@@ -26,4 +26,5 @@
     <string name="prefsInvalidPortMessage">The value &quot;REPLACE&quot; is not a number between 1 and 65535, and it must be!</string>
     <string name="navPrev">&lt;- Prev</string>
     <string name="navNext">Next -&gt;</string>
+    <string name="prefsPollCategoryLabel">Background Polling</string>
 </resources>

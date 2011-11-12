@@ -76,6 +76,7 @@ public final class R {
         public static final int prefsOnmsHostDialogMessage=0x7f070009;
         public static final int prefsPasswordSummary=0x7f070011;
         public static final int prefsPasswordTitle=0x7f070010;
+        public static final int prefsPollCategoryLabel=0x7f07001a;
         public static final int prefsPortSummary=0x7f07000d;
         public static final int prefsPortTitle=0x7f07000c;
         public static final int prefsScreenTitle=0x7f070015;

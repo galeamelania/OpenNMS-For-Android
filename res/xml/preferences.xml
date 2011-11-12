@@ -6,4 +6,8 @@
     <EditTextPreference android:title="@string/prefsUsernameTitle" android:key="onms.username" android:summary="@string/prefsUsernameSummary"/>
     <EditTextPreference android:title="@string/prefsPasswordTitle" android:key="onms.password" android:summary="@string/prefsPasswordSummary"/>
     <EditTextPreference android:title="@string/prefsOnmsAppPathTitle" android:key="onms.app_path" android:summary="@string/prefsOnmsAppPathSummary" android:defaultValue="@string/prefsOnmsDefaultPath"/>
+    <PreferenceCategory android:summary="Configure background polling" android:title="@string/prefsPollCategoryLabel" android:key="onms.poller.category">
+        <CheckBoxPreference android:summary="Enables a service which runs constantly to check for updates from OpenNMS" android:title="Enable Background Updates" android:key="onms.enable_polling"/>
+        <EditTextPreference android:summary="The time, in seconds, between checks for updates" android:title="Polling Interval" android:key="onms.poller.interval"/>
+    </PreferenceCategory>
 </PreferenceScreen>
