@@ -5,6 +5,8 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
 import com.zanclus.opennms.activities.AcknowledgmentsActivity;
 import com.zanclus.opennms.activities.AlarmsActivity;
 import com.zanclus.opennms.activities.EventsActivity;
@@ -13,6 +15,7 @@ import com.zanclus.opennms.activities.NotificationsActivity;
 import com.zanclus.opennms.activities.OutagesActivity;
 import com.zanclus.opennms.adapters.MainMenuListAdapter;
 import com.zanclus.opennms.api.Outages;
+import com.zanclus.opennms.data.entities.OnmsOutageCollection;
 import com.zanclus.opennms.util.StateSingleton;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -105,26 +108,13 @@ public class OpenNMSActivity extends Activity {
         	@Override
         	public void onSuccess(String content) {
         		super.onSuccess(content);
-        		try {
-					org.json.JSONObject result = new JSONObject(new JSONTokener(content)) ;
-            		TextView outageCountView = (TextView) ((RelativeLayout) ((ListView) findViewById(R.id.mainMenu)).getChildAt(0)).getChildAt(2) ;
-            		ProgressBar progBar = (ProgressBar) ((RelativeLayout) ((ListView) findViewById(R.id.mainMenu)).getChildAt(0)).getChildAt(1) ;
-            		if (outageCountView==null) {
-            			Log.e("SURPRISE", "TextView object is null") ;
-            			progBar.setVisibility(View.INVISIBLE) ;
-            		} else {
-	            		if (result.has("@totalCount")) {
-	            			String testValue = result.getString("@totalCount") ;
-	                		outageCountView.setText(testValue) ;
-	                		outageCountView.setVisibility(View.VISIBLE) ;
-	                		progBar.setVisibility(View.INVISIBLE) ;
-	            		} else {
-	            			Log.d("DEBUGGING","Value not found for '@totalCount' in outages results.") ;
-	            		}
-            		}
-				} catch (JSONException e) {
-	        		Log.e("OutageCount",e.getLocalizedMessage(),e) ;
-				}
+        		//TODO Use xstream to parse result
+        		XStream xstream = new XStream(new JettisonMappedXmlDriver()) ;
+        		OnmsOutageCollection outages = (OnmsOutageCollection) xstream.fromXML(content) ;
+        		TextView outageCountView = (TextView) ((RelativeLayout) ((ListView) findViewById(R.id.mainMenu)).getChildAt(0)).getChildAt(2) ;
+        		ProgressBar progBar = (ProgressBar) ((RelativeLayout) ((ListView) findViewById(R.id.mainMenu)).getChildAt(0)).getChildAt(1) ;
+        		outageCountView.setText(outages.getCount()) ;
+        		progBar.setVisibility(View.INVISIBLE) ;
         	}
 
         	@Override
@@ -173,25 +163,13 @@ public class OpenNMSActivity extends Activity {
         	@Override
         	public void onSuccess(String content) {
         		super.onSuccess(content);
-        		try {
-					org.json.JSONObject result = new JSONObject(new JSONTokener(content)) ;
-            		TextView outageCountView = (TextView) ((RelativeLayout) ((ListView) findViewById(R.id.mainMenu)).getChildAt(0)).getChildAt(2) ;
-            		ProgressBar progBar = (ProgressBar) ((RelativeLayout) ((ListView) findViewById(R.id.mainMenu)).getChildAt(0)).getChildAt(1) ;
-            		if (outageCountView==null) {
-            			Log.e("SURPRISE", "TextView object is null") ;
-            		} else {
-	            		if (result.has("@totalCount")) {
-	            			String testValue = result.getString("@totalCount") ;
-	                		outageCountView.setText(testValue) ;
-	                		outageCountView.setVisibility(View.VISIBLE) ;
-	                		progBar.setVisibility(View.INVISIBLE) ;
-	            		} else {
-	            			Log.d("DEBUGGING","Value not found for '@totalCount' in outages results.") ;
-	            		}
-            		}
-				} catch (JSONException e) {
-	        		Log.e("OutageCount",e.getLocalizedMessage(),e) ;
-				}
+        		//TODO Use xstream to parse result
+        		XStream xstream = new XStream(new JettisonMappedXmlDriver()) ;
+        		OnmsOutageCollection outages = (OnmsOutageCollection) xstream.fromXML(content) ;
+        		TextView outageCountView = (TextView) ((RelativeLayout) ((ListView) findViewById(R.id.mainMenu)).getChildAt(0)).getChildAt(2) ;
+        		ProgressBar progBar = (ProgressBar) ((RelativeLayout) ((ListView) findViewById(R.id.mainMenu)).getChildAt(0)).getChildAt(1) ;
+        		outageCountView.setText(outages.getCount()) ;
+        		progBar.setVisibility(View.INVISIBLE) ;
         	}
 
         	@Override
