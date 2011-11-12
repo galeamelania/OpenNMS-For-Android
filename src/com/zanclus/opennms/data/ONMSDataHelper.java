@@ -20,7 +20,12 @@ public class ONMSDataHelper extends SQLiteOpenHelper {
 				"nodelabel text," +
 				"foreignsource text," +
 				"foreignid integer," +
-				"lastpoll integer" +
+				"lastpoll integer," +
+				"createtime integer," +
+				"syscontact text," +
+				"location text," +
+				"sysdescription text," +
+				"sysname text" +
 			");") ;
 		db.execSQL("CREATE TABLE ipinterface (" +
 				"id integer primary key," +
@@ -37,20 +42,19 @@ public class ONMSDataHelper extends SQLiteOpenHelper {
 				"id integer primary key," +
 				"name text not null" +
 			") ;") ;
-		db.execSQL("CREATE TABLE snmpinterfaces (" +
-				"id integer primary key," +
-				"ifindex integer not null," +
-				"name text," +
-				"speed integer," +
-				"ipaddress text," +
-				"macaddr text" +
-			") ;") ;
+
 		db.execSQL("CREATE TABLE categories (" +
 				"id integer primary key," +
 				"name text not null" +
 			");") ;
+
+		db.execSQL("CREATE TABLE nodecategories (" +
+				"nodeid integer primary key," +
+				"category integer not null" +
+			");") ;
+
 		db.execSQL("CREATE TABLE assetrecord (" +
-				"id integer primary key," +
+				"nodeid integer primary key," +
 				"address1 text," +
 				"address2 text," +
 				"autoenable text," +
@@ -60,7 +64,7 @@ public class ONMSDataHelper extends SQLiteOpenHelper {
 				"city text," +
 				"comment text," +
 				"connection text," +
-				"dateinstalled integer," +
+				"dateinstalled text," +
 				"department text," +
 				"description text," +
 				"displaycategory text," +
@@ -68,7 +72,7 @@ public class ONMSDataHelper extends SQLiteOpenHelper {
 				"enable text," +
 				"floor text," +
 				"lastmodifiedby text," +
-				"lastmodifieddate integer," +
+				"lastmodifieddate text," +
 				"lease text," +
 				"leaseexpires text," +
 				"maintcontractexpires text," +
