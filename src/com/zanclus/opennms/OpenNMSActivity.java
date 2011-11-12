@@ -1,11 +1,18 @@
 package com.zanclus.opennms;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.zanclus.opennms.activities.AcknowledgmentsActivity;
 import com.zanclus.opennms.activities.AlarmsActivity;
 import com.zanclus.opennms.activities.EventsActivity;
 import com.zanclus.opennms.activities.NodesActivity;
 import com.zanclus.opennms.activities.NotificationsActivity;
 import com.zanclus.opennms.activities.OutagesActivity;
+import com.zanclus.opennms.adapters.MainMenuListAdapter;
+import com.zanclus.opennms.api.Outages;
 import com.zanclus.opennms.util.StateSingleton;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -14,11 +21,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class OpenNMSActivity extends Activity {
     /** Called when the activity is first created. */
@@ -40,7 +51,9 @@ public class OpenNMSActivity extends Activity {
         	startActivity(new Intent(this, ConfigurationActivity.class)) ;
         }
 
-        ListView mainMenuList = (ListView) findViewById(R.id.mainMenu) ;
+        final ListView mainMenuList = (ListView) findViewById(R.id.mainMenu) ;
+        mainMenuList.setAdapter(new MainMenuListAdapter(this)) ;
+        mainMenuList.invalidate() ;
         mainMenuList.setOnItemClickListener(new ListView.OnItemClickListener() {
 
 			@Override
@@ -86,6 +99,42 @@ public class OpenNMSActivity extends Activity {
 			}
         	
 		}) ;
+
+        RequestParams params = new RequestParams("ifRegainedService", "null") ;
+        Outages.getOutages(params, new AsyncHttpResponseHandler() {
+        	@Override
+        	public void onSuccess(String content) {
+        		super.onSuccess(content);
+        		try {
+					org.json.JSONObject result = new JSONObject(new JSONTokener(content)) ;
+            		TextView outageCountView = (TextView) ((RelativeLayout) ((ListView) findViewById(R.id.mainMenu)).getChildAt(0)).getChildAt(2) ;
+            		ProgressBar progBar = (ProgressBar) ((RelativeLayout) ((ListView) findViewById(R.id.mainMenu)).getChildAt(0)).getChildAt(1) ;
+            		if (outageCountView==null) {
+            			Log.e("SURPRISE", "TextView object is null") ;
+            			progBar.setVisibility(View.INVISIBLE) ;
+            		} else {
+	            		if (result.has("@totalCount")) {
+	            			String testValue = result.getString("@totalCount") ;
+	                		outageCountView.setText(testValue) ;
+	                		outageCountView.setVisibility(View.VISIBLE) ;
+	                		progBar.setVisibility(View.INVISIBLE) ;
+	            		} else {
+	            			Log.d("DEBUGGING","Value not found for '@totalCount' in outages results.") ;
+	            		}
+            		}
+				} catch (JSONException e) {
+	        		Log.e("OutageCount",e.getLocalizedMessage(),e) ;
+				}
+        	}
+
+        	@Override
+        	public void onFailure(Throwable error) {
+        		super.onFailure(error);
+        		ProgressBar progBar = (ProgressBar) ((RelativeLayout) ((ListView) findViewById(R.id.mainMenu)).getChildAt(0)).getChildAt(1) ;
+        		progBar.setVisibility(View.INVISIBLE) ;
+        		Log.e("ResumeOutageCount",error.getLocalizedMessage(),error) ;
+        	}
+        }) ;
     }
 
     @Override
@@ -118,5 +167,40 @@ public class OpenNMSActivity extends Activity {
         		sp.getString("onms.app_path","").contentEquals("")) {
         	startActivity(new Intent(this, ConfigurationActivity.class)) ;
         }
+
+        RequestParams params = new RequestParams("ifRegainedService", "null") ;
+        Outages.getOutages(params, new AsyncHttpResponseHandler() {
+        	@Override
+        	public void onSuccess(String content) {
+        		super.onSuccess(content);
+        		try {
+					org.json.JSONObject result = new JSONObject(new JSONTokener(content)) ;
+            		TextView outageCountView = (TextView) ((RelativeLayout) ((ListView) findViewById(R.id.mainMenu)).getChildAt(0)).getChildAt(2) ;
+            		ProgressBar progBar = (ProgressBar) ((RelativeLayout) ((ListView) findViewById(R.id.mainMenu)).getChildAt(0)).getChildAt(1) ;
+            		if (outageCountView==null) {
+            			Log.e("SURPRISE", "TextView object is null") ;
+            		} else {
+	            		if (result.has("@totalCount")) {
+	            			String testValue = result.getString("@totalCount") ;
+	                		outageCountView.setText(testValue) ;
+	                		outageCountView.setVisibility(View.VISIBLE) ;
+	                		progBar.setVisibility(View.INVISIBLE) ;
+	            		} else {
+	            			Log.d("DEBUGGING","Value not found for '@totalCount' in outages results.") ;
+	            		}
+            		}
+				} catch (JSONException e) {
+	        		Log.e("OutageCount",e.getLocalizedMessage(),e) ;
+				}
+        	}
+
+        	@Override
+        	public void onFailure(Throwable error) {
+        		super.onFailure(error);
+        		ProgressBar progBar = (ProgressBar) ((RelativeLayout) ((ListView) findViewById(R.id.mainMenu)).getChildAt(0)).getChildAt(1) ;
+        		progBar.setVisibility(View.INVISIBLE) ;
+        		Log.e("ResumeOutageCount",error.getLocalizedMessage(),error) ;
+        	}
+        }) ;
     }
 }

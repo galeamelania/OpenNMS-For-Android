@@ -3,10 +3,24 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
-	<classpathentry kind="lib" path="libs/simple-xml-2.6.2.jar"/>
 	<classpathentry kind="lib" path="libs/android-async-http-1.3.1.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="http://loopj.com/android-async-http/doc/com/loopj/android/http/"/>
+			<attribute name="javadoc_location" value="file:/home/dphillips/git/android-async-http/doc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="libs/jackson-core-asl-1.9.2.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://jackson.codehaus.org/1.9.0/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="libs/jackson-mapper-asl-1.9.2.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://jackson.codehaus.org/1.9.0/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="libs/gson-1.7.1.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/home/dphillips/Development/Java/google-gson-1.7.1/gson-1.7.1-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="output" path="bin/classes"/>

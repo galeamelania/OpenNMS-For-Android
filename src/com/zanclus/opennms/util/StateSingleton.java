@@ -3,15 +3,16 @@ package com.zanclus.opennms.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 public class StateSingleton {
 
 	private static StateSingleton instance ;
 	private SharedPreferences prefs = null ;
 
-	protected StateSingleton(Activity baseActivity) {
+	protected StateSingleton(Context ctx) {
 		super() ;
-		prefs = baseActivity.getSharedPreferences("OpenNMS", Context.MODE_PRIVATE) ;
+		prefs = PreferenceManager.getDefaultSharedPreferences(ctx) ;
 	}
 
 	public static StateSingleton getInstance(Activity activity) {

@@ -32,8 +32,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/logoArea"
-        android:entries="@array/mainMenuItems" >
+        android:layout_below="@+id/logoArea">
 
     </ListView>
 

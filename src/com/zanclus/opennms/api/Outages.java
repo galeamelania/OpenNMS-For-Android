@@ -15,8 +15,8 @@ public class Outages {
 	 * Returns the 10 most recent outages
 	 * @param handler An implementation of the AsyncHttpResponseHandler which will handle the results of this request.
 	 */
-	public static void getOutages(AsyncHttpResponseHandler handler) {
-		RestClient.restGetRequest("/outages", new RequestParams(), handler) ;
+	public static void getOutages(RequestParams params, AsyncHttpResponseHandler handler) {
+		RestClient.restGetRequest("/outages", params, handler) ;
 	}
 
 	/**

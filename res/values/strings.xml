@@ -24,4 +24,6 @@
     <string name="prefsScreenTitle">OpenNMS Preferences</string>
     <string name="prefsInvalidPortTitle">Invalid Server Port</string>
     <string name="prefsInvalidPortMessage">The value &quot;REPLACE&quot; is not a number between 1 and 65535, and it must be!</string>
+    <string name="navPrev">&lt;- Prev</string>
+    <string name="navNext">Next -&gt;</string>
 </resources>
