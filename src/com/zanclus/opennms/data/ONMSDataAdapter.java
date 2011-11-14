@@ -1,17 +1,13 @@
 package com.zanclus.opennms.data;
 
 import java.util.Date;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteQuery;
-import android.database.sqlite.SQLiteQueryBuilder;
 import android.util.Log;
 
 public class ONMSDataAdapter {
@@ -203,8 +199,6 @@ public class ONMSDataAdapter {
 	 * @return A {@link JSONObject} containing the details about the specified node
 	 */
 	public JSONObject getNodeById(long nodeId) {
-		JSONObject node = new JSONObject() ;
-		
 		return null ;
 	}
 
@@ -318,12 +312,6 @@ public class ONMSDataAdapter {
 	 * @return A {@link JSONArray} containing the details about the node's IP interfaces
 	 */
 	public JSONArray getIpInterfacesForNode(long nodeId) {
-		JSONArray ipInterfaces = new JSONArray() ;
-		SQLiteQueryBuilder builder = new SQLiteQueryBuilder() ;
-		builder.appendWhere("nodeid='"+nodeId+"'") ;
-		builder.setTables("ipinterface") ;
-		builder.setTables("ipinterface") ;
-		//TODO Stub method in progress
 		return null ;
 	}
 

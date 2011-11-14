@@ -27,4 +27,6 @@
     <string name="navPrev">&lt;- Prev</string>
     <string name="navNext">Next -&gt;</string>
     <string name="prefsPollCategoryLabel">Background Polling</string>
+    <string name="onms_db_create_error_title">Error creating database for: </string>
+    <string name="onms_db_create_error_message">An error was encountered while trying to create the database table. The message was: </string>
 </resources>

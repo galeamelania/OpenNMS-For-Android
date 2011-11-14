@@ -67,6 +67,8 @@ public final class R {
         public static final int navNext=0x7f070019;
         public static final int navPrev=0x7f070018;
         public static final int ok=0x7f070007;
+        public static final int onms_db_create_error_message=0x7f07001c;
+        public static final int onms_db_create_error_title=0x7f07001b;
         public static final int outages_header=0x7f070004;
         public static final int prefsInvalidPortMessage=0x7f070017;
         public static final int prefsInvalidPortTitle=0x7f070016;
