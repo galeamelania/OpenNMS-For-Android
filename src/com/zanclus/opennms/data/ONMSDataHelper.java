@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class ONMSDataHelper extends SQLiteOpenHelper {
 
-	private static final String DATABASE_NAME = "opennms" ;
+	private static final String DATABASE_NAME = "com.zanclus.onms" ;
 	private static final int DATABASE_VERSION = 1 ;
 
 	public ONMSDataHelper(Context context) {
