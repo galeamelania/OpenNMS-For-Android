@@ -203,7 +203,8 @@ public class ONMSDataAdapter {
 	 * @return A {@link JSONObject} containing the details about the specified node
 	 */
 	public JSONObject getNodeById(long nodeId) {
-		//TODO: Stub Method
+		JSONObject node = new JSONObject() ;
+		
 		return null ;
 	}
 

@@ -53,10 +53,11 @@ public final class R {
         public static final int severity=0x7f080008;
     }
     public static final class layout {
-        public static final int main=0x7f030000;
-        public static final int main_menu_row=0x7f030001;
-        public static final int outage_row=0x7f030002;
-        public static final int outages=0x7f030003;
+        public static final int base=0x7f030000;
+        public static final int main=0x7f030001;
+        public static final int main_menu_row=0x7f030002;
+        public static final int outage_row=0x7f030003;
+        public static final int outages=0x7f030004;
     }
     public static final class string {
         public static final int Alerts=0x7f070002;
