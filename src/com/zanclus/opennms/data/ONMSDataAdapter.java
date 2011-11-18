@@ -477,5 +477,11 @@ public class ONMSDataAdapter {
 		}
 	}
 
-	
+	/**
+	 * Given a {@link JSONObject}, parse the object and load the outage data into the database
+	 * @param outages A {@link JSONObject} containing outage information.
+	 */
+	public void loadOutages(JSONObject outages) {
+		
+	}
 }
