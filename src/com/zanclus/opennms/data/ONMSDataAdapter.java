@@ -1,5 +1,6 @@
 package com.zanclus.opennms.data;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -8,7 +9,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.j256.ormlite.dao.Dao;
+import com.zanclus.opennms.data.entities.Category;
+import com.zanclus.opennms.data.entities.IPInterface;
 import com.zanclus.opennms.data.entities.Node;
+import com.zanclus.opennms.data.entities.NodeCategories;
+import com.zanclus.opennms.data.entities.Service;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -202,46 +207,29 @@ public class ONMSDataAdapter {
 	/**
 	 * Return information about the node specified by nodeId
 	 * @param nodeId The numeric ID for the node to retrieve data for
-	 * @return A {@link JSONObject} containing the details about the specified node
+	 * @return A {@link Node} containing the details about the specified node
 	 */
-	public JSONObject getNodeById(long nodeId) {
+	public Node getNodeById(long nodeId) {
 		return null ;
 	}
 
 	/**
 	 * Return information about the node specified by nodeId
 	 * @param nodeLabel The text name for the node to retrieve data for
-	 * @return A {@link JSONArray} containing the details about the specified node
+	 * @return A {@link List} of {@link Node} objects containing the details about the matching nodes
 	 */
-	public JSONArray getNodeByName(String nodeLabel) {
+	public List<Node> getNodeByName(String nodeLabel) {
 		try {
 			Dao<Node, Integer> nodeDao = dbHelper.getNodeDao() ;
 			List<Node> nodes = nodeDao.queryForEq("nodeLabel", nodeLabel) ;
 
 			if (nodes!=null) {
 				if (nodes.size()!=0) {
-					JSONArray nodeArray = new JSONArray() ;
-					for (Node current : nodes) {
-						JSONObject node = new JSONObject() ;
-						node.put("nodeId", current.getNodeId()) ;
-						node.put("createTime", current.getCreateTime()) ;
-						node.put("foreignId", current.getForeignId()) ;
-						node.put("foreignSource", current.getForeignSource()) ;
-						node.put("lastPolled", current.getLastPoll()) ;
-						node.put("location", current.getLocation()) ;
-						node.put("sysContact", current.getSysContact()) ;
-						node.put("sysDescription", current.getSysDescription()) ;
-						node.put("sysName", current.getSysName()) ;
-						node.put("nodeLabel", current.getNodeLabel()) ;
-						nodeArray.put(node) ;
-					}
-					return nodeArray ;
+					return nodes ;
 				}
 			}
 		} catch (java.sql.SQLException e) {
 			Log.e("ONMSDataAdapter","SQLException while attempting to create DAO for Node", e) ;
-		} catch (JSONException e) {
-			Log.e("ONMSDataAdapter","JSONException while attempting to create return values for Node", e) ;
 		}
 		return null ;
 	}
@@ -343,19 +331,41 @@ public class ONMSDataAdapter {
 	/**
 	 * Get the details about a all IP interfaces for a node specified by nodeId
 	 * @param nodeId The numeric id for the node to retrieve interface information for
-	 * @return A {@link JSONArray} containing the details about the node's IP interfaces
+	 * @return A {@link List} of {@link IPInterface} objects containing the details about the node's IP interfaces
 	 */
-	public JSONArray getIpInterfacesForNode(long nodeId) {
+	public List<IPInterface> getIpInterfacesForNode(long nodeId) {
+		try {
+			Dao<IPInterface, Integer> intfDao = dbHelper.getIPInterfaceDao() ;
+			List<IPInterface> interfaces = intfDao.queryForEq("nodeId", nodeId) ;
+
+			if (interfaces!=null) {
+				if (interfaces.size()!=0) {
+					return interfaces ;
+				}
+			}
+		} catch (java.sql.SQLException e) {
+			Log.e("ONMSDataAdapter","SQLException while attempting to retreive IPInterface", e) ;
+		}
 		return null ;
 	}
 
 	/**
 	 * Retrieve the details about a single IP interface given it's IP address
 	 * @param ipAddr The IP address for which detailed information will be retrieved
-	 * @returnA {@link JSONArray} containing the details about the IP interface
+	 * @return A {@link IPInterface} containing the details about the IP interface
 	 */
-	public JSONObject getInterfaceForAddr(String ipAddr) {
-		//TODO: Stub Method
+	public IPInterface getInterfaceForAddr(String ipAddr) {
+		try {
+			Dao<IPInterface, Integer> intfDao = dbHelper.getIPInterfaceDao() ;
+			List<IPInterface> data = intfDao.queryForEq("ipAddress", ipAddr) ;
+			if (data!=null) {
+				if (data.size()>0) {
+					return data.get(0) ;
+				}
+			}
+		} catch (java.sql.SQLException e) {
+			Log.e("ONMSDataAdapter","SQLException while attempting to retreive IPInterface", e) ;
+		}
 		return null ;
 	}
 
@@ -368,22 +378,45 @@ public class ONMSDataAdapter {
 	}
 
 	/**
-	 * Returns a {@link JSONArray} containing all associated services for the specified interface ID
+	 * Returns a {@link List} of {@link Service} objects containing all associated services for the specified interface ID
 	 * @param ifId The numeric ID of the interface for which to retrieve services information
-	 * @return A {@link JSONArray} containing the details about the services associated with the given interface ID
+	 * @return A {@link List} of {@link Service} objects containing the details about the services associated with the given interface ID
 	 */
-	public JSONArray getServicesForInterface(long ifId) {
-		//TODO: Stub Method
+	public List<Service> getServicesForInterface(int ifId) {
+		try {
+			Dao<IPInterface, Integer> intfDao = dbHelper.getIPInterfaceDao() ;
+			IPInterface iface = intfDao.queryForId(ifId) ;
+			if (iface!=null) {
+				return iface.getServices() ;
+			}
+		} catch (java.sql.SQLException e) {
+			Log.e("ONMSDataAdapter","SQLException while attempting to retreive IPInterface", e) ;
+		}
 		return null ;
 	}
 
 	/**
-	 * Retrieve a {@link JSONArray} containing information about all nodes associated with a given category
+	 * Retrieve a {@link List} of {@link Node} objects containing information about all nodes associated with a given category
 	 * @param category The numeric category identifier for which to filter the node list
-	 * @return A {@link JSONArray} containing the details about the nodes which are associated with the specified category
+	 * @return A {@link List} of {@link Node} objects containing the details about the nodes which are associated with the specified category
 	 */
-	public JSONArray getNodesByCategory(int category) {
-		//TODO: Stub Method
+	public List<Node> getNodesByCategory(int category) {
+		try {
+			Dao<Category, Integer> catDao = dbHelper.getCategoryDao() ;
+			Category cat = catDao.queryForId(category) ;
+			List<NodeCategories> catList = cat.getNodes() ;
+			if (catList!=null) {
+				if (catList.size()>0) {
+					ArrayList<Node> nodeList = new ArrayList<Node>() ;
+					for (NodeCategories next: catList) {
+						nodeList.add(next.getNode()) ;
+					}
+					return nodeList ;
+				}
+			}
+		} catch (java.sql.SQLException e) {
+			Log.e("ONMSDataAdapter","SQLException while attempting to retreive IPInterface", e) ;
+		}
 		return null ;
 	}
 

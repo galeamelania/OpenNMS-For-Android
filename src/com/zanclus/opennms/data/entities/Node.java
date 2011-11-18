@@ -40,7 +40,7 @@ public class Node {
 	private String sysName ;
 
 	@DatabaseField(canBeNull=true, foreign=true)
-	private List<Category> categories = new ArrayList<Category>() ;
+	private List<NodeCategories> categories = new ArrayList<NodeCategories>() ;
 
 	@DatabaseField(canBeNull=true, foreign=true)
 	private AssetRecord assetRecord ;
@@ -132,11 +132,11 @@ public class Node {
 		this.sysName = sysName;
 	}
 
-	public List<Category> getCategories() {
+	public List<NodeCategories> getCategories() {
 		return categories;
 	}
 
-	public void addCategory(Category cat) {
+	public void addCategory(NodeCategories cat) {
 		this.categories.add(cat);
 	}
 

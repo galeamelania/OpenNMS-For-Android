@@ -1,5 +1,8 @@
 package com.zanclus.opennms.data.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -11,6 +14,9 @@ public class Category {
 
 	@DatabaseField(canBeNull=false)
 	private String name ;
+
+	@DatabaseField(foreign=true)
+	private List<NodeCategories> nodes = new ArrayList<NodeCategories>() ;
 
 	public Category() {
 		// Default constructor for ORM-lite
@@ -30,5 +36,13 @@ public class Category {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public List<NodeCategories> getNodes() {
+		return nodes;
+	}
+
+	public void setNodes(List<NodeCategories> nodes) {
+		this.nodes = nodes;
 	}
 }
