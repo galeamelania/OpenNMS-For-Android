@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import com.j256.ormlite.dao.Dao;
 import com.zanclus.opennms.data.entities.Category;
 import com.zanclus.opennms.data.entities.IPInterface;
+import com.zanclus.opennms.data.entities.InterfaceServices;
 import com.zanclus.opennms.data.entities.Node;
 import com.zanclus.opennms.data.entities.NodeCategories;
 import com.zanclus.opennms.data.entities.Service;
@@ -387,7 +388,15 @@ public class ONMSDataAdapter {
 			Dao<IPInterface, Integer> intfDao = dbHelper.getIPInterfaceDao() ;
 			IPInterface iface = intfDao.queryForId(ifId) ;
 			if (iface!=null) {
-				return iface.getServices() ;
+				List<InterfaceServices> ifServices = iface.getServices() ;
+				if (ifServices!=null) {
+					if (ifServices.size()>0) {
+						ArrayList<Service> services = new ArrayList<Service>() ;
+						for (InterfaceServices ifService: ifServices) {
+							services.add(ifService.getService()) ;
+						}
+					}
+				}
 			}
 		} catch (java.sql.SQLException e) {
 			Log.e("ONMSDataAdapter","SQLException while attempting to retreive IPInterface", e) ;

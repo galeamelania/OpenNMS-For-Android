@@ -22,7 +22,7 @@ public class IPInterface {
 	private long lastPoll ;
 
 	@DatabaseField(foreign=true, canBeNull=true)
-	private List<Service> services = new ArrayList<Service>() ;
+	private List<InterfaceServices> services = new ArrayList<InterfaceServices>() ;
 
 	public IPInterface() {
 		// Default constructor for ORM-lite
@@ -60,11 +60,11 @@ public class IPInterface {
 		this.lastPoll = lastPoll;
 	}
 
-	public List<Service> getServices() {
+	public List<InterfaceServices> getServices() {
 		return services;
 	}
 
-	public void addService(Service service) {
+	public void addService(InterfaceServices service) {
 		this.services.add(service) ;
 	}
 }
