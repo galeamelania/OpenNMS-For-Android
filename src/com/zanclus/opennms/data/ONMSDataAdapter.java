@@ -1,9 +1,15 @@
 package com.zanclus.opennms.data;
 
 import java.util.Date;
+import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.j256.ormlite.dao.Dao;
+import com.zanclus.opennms.data.entities.Node;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.SQLException;
@@ -13,7 +19,7 @@ import android.util.Log;
 public class ONMSDataAdapter {
 
 	private Context ctx ;
-	private ONMSDataHelper dbHelper ;
+	private ORMDataHelper dbHelper ;
 	private SQLiteDatabase db ;
 
 	/**
@@ -30,7 +36,7 @@ public class ONMSDataAdapter {
 	 * @throws SQLException If there is an error connecting to the database
 	 */
 	public ONMSDataAdapter open() throws SQLException {
-		dbHelper = new ONMSDataHelper(ctx) ;
+		dbHelper = new ORMDataHelper(ctx) ;
 		db = dbHelper.getWritableDatabase() ;
 		return this ;
 	}
@@ -205,10 +211,38 @@ public class ONMSDataAdapter {
 	/**
 	 * Return information about the node specified by nodeId
 	 * @param nodeLabel The text name for the node to retrieve data for
-	 * @return A {@link JSONObject} containing the details about the specified node
+	 * @return A {@link JSONArray} containing the details about the specified node
 	 */
-	public JSONObject getNodeByName(String nodeLabel) {
-		//TODO: Stub Method
+	public JSONArray getNodeByName(String nodeLabel) {
+		try {
+			Dao<Node, Integer> nodeDao = dbHelper.getNodeDao() ;
+			List<Node> nodes = nodeDao.queryForEq("nodeLabel", nodeLabel) ;
+
+			if (nodes!=null) {
+				if (nodes.size()!=0) {
+					JSONArray nodeArray = new JSONArray() ;
+					for (Node current : nodes) {
+						JSONObject node = new JSONObject() ;
+						node.put("nodeId", current.getNodeId()) ;
+						node.put("createTime", current.getCreateTime()) ;
+						node.put("foreignId", current.getForeignId()) ;
+						node.put("foreignSource", current.getForeignSource()) ;
+						node.put("lastPolled", current.getLastPoll()) ;
+						node.put("location", current.getLocation()) ;
+						node.put("sysContact", current.getSysContact()) ;
+						node.put("sysDescription", current.getSysDescription()) ;
+						node.put("sysName", current.getSysName()) ;
+						node.put("nodeLabel", current.getNodeLabel()) ;
+						nodeArray.put(node) ;
+					}
+					return nodeArray ;
+				}
+			}
+		} catch (java.sql.SQLException e) {
+			Log.e("ONMSDataAdapter","SQLException while attempting to create DAO for Node", e) ;
+		} catch (JSONException e) {
+			Log.e("ONMSDataAdapter","JSONException while attempting to create return values for Node", e) ;
+		}
 		return null ;
 	}
 
