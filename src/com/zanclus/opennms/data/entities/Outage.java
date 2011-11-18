@@ -1,30 +1,44 @@
 package com.zanclus.opennms.data.entities;
 
+import java.util.Date;
+
+import org.simpleframework.xml.Attribute;
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Root;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName="outages")
+@Root(name="outage")
 public class Outage {
 
 	@DatabaseField(id=true, columnName="id")
+	@Attribute(name="id")
 	private long outageId ;
 
 	@DatabaseField(columnName="iflostservice")
+	@Element(name="ifLostService",type=Date.class)
 	private Long ifLostService ;
 
 	@DatabaseField(canBeNull=true)
+	@Element(name="ifRegainedService", type=Date.class)
 	private Long ifRegainedService ;
 
 	@DatabaseField(columnName="ipaddress")
+	@Element(name="ipAddress")
 	private String ipAddress ;
 
-	@DatabaseField(columnName="serviceid", canBeNull=true, foreign=true)
-	private Service service ;
+	@DatabaseField(foreign=true)
+	@Element(name="monitoredService")
+	private InterfaceService service ;
 
 	@DatabaseField(columnName="servicelostevent", foreign=true)
+	@Element(name="serviceLostEvent")
 	private Event serviceLostEvent ;
 
 	@DatabaseField(columnName="serviceregainedevent", canBeNull=true, foreign=true)
+	@Element(name="serviceRegainedEvent", required=false)
 	private Event serviceRegainedEvent ;
 
 	public Outage() {
@@ -63,11 +77,11 @@ public class Outage {
 		this.ipAddress = ipAddress;
 	}
 
-	public Service getService() {
+	public InterfaceService getService() {
 		return service;
 	}
 
-	public void setService(Service service) {
+	public void setService(InterfaceService service) {
 		this.service = service;
 	}
 

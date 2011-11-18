@@ -1,51 +1,75 @@
 package com.zanclus.opennms.data.entities;
 
+import java.util.Date;
+
+import org.simpleframework.xml.Attribute;
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Root;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName="alarms")
+@Root(name="alarm")
 public class Alarm {
 
 	@DatabaseField(id=true, columnName="id")
+	@Attribute(name="id")
 	private long alarmId ;
 	
 	@DatabaseField
+	@Attribute(name="severity")
 	private String severity ;
 
+	@Attribute(name="count")
+	private int count ;
+
 	@DatabaseField
+	@Attribute(name="type")
 	private long type ;
 	
 	@DatabaseField
+	@Element(name="clearKey", required=false)
 	private String clearKey ;
 	
 	@DatabaseField
+	@Element
 	private String description ;
 	
-	@DatabaseField(foreign=true, canBeNull=true, columnName="firsteventtime")
-	private Event firstTimeEvent ;
+	@DatabaseField(columnName="firsteventtime")
+	@Element(type=Date.class)
+	private long firstEventTime ;
 	
 	@DatabaseField(columnName="ipaddress")
+	@Element(required=false)
 	private String ipAddress ;
 	
 	@DatabaseField(foreign=true, canBeNull=true, columnName="lastevent")
+	@Element(type=Event.class)
 	private Event lastEvent ;
 	
 	@DatabaseField(columnName="logmessage")
+	@Element
 	private String logMessage ;
 	
 	@DatabaseField(columnName="reductionkey")
+	@Element
 	private String reductionKey ;
 	
 	@DatabaseField(columnName="suppressedtime")
+	@Element(type=Date.class)
 	private long suppressedTime ;
 	
 	@DatabaseField(columnName="suppresseduntil")
+	@Element(type=Date.class)
 	private long suppressedUntil ;
 	
 	@DatabaseField
+	@Element
 	private String uei ;
 	
 	@DatabaseField(canBeNull=true, columnName="probablecause")
+	@Element
 	private Long probableCause ;
 
 	public Alarm() {
@@ -92,12 +116,12 @@ public class Alarm {
 		this.description = description;
 	}
 
-	public Event getFirstTimeEvent() {
-		return firstTimeEvent;
+	public long getFirstTimeEvent() {
+		return firstEventTime;
 	}
 
-	public void setFirstTimeEvent(Event firstTimeEvent) {
-		this.firstTimeEvent = firstTimeEvent;
+	public void setFirstTimeEvent(long firstEventTime) {
+		this.firstEventTime = firstEventTime;
 	}
 
 	public String getIpAddress() {
@@ -162,5 +186,13 @@ public class Alarm {
 
 	public void setProbableCause(Long probableCause) {
 		this.probableCause = probableCause;
+	}
+
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
 	}
 }

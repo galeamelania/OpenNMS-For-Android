@@ -1,43 +1,75 @@
 package com.zanclus.opennms.data.entities;
 
+import org.simpleframework.xml.Attribute;
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Root;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName="events")
+@Root(name="event")
 public class Event {
 
 	@DatabaseField(id=true,unique=true)
+	@Attribute(name="id")
 	private long id;
 
+	@Attribute(name="log")
+	private String logYN ;
+
+	@Attribute(name="display")
+	private String displayYN ;
+
 	@DatabaseField(columnName="createtime")
+	@Element(name="createTime")
 	private long createTime ;
 
 	@DatabaseField
+	@Element(name="description")
 	private String description;
 
 	@DatabaseField(columnName="nmshost")
+	@Element(name="host")
 	private String onmsHost ;
 
 	@DatabaseField(columnName="logmessage")
+	@Element(name="logMessage")
 	private String logMessage ;
 
 	@DatabaseField
+	@Element(name="source")
 	private String source ;
 
 	@DatabaseField
+	@Element(name="time")
 	private long time ;
 
 	@DatabaseField
+	@Element(name="uei")
 	private String uei ;
 
 	@DatabaseField(columnName="ipaddress")
+	@Element(name="ipAddress")
 	private String ipAddress ;
 
 	@DatabaseField
+	@Attribute(name="severity")
 	private String severity ;
 
 	@DatabaseField
+	@Element(name="parms")
 	private String parms ;
+
+	@Element(name="snmp", required=false)
+	private String snmp ;
+
+	@Element(name="snmpHost", required=false)
+	private String snmpHost ;
+
+	@Element(name="nodeId")
+	@DatabaseField(columnName="nodeid")
+	private int nodeId ;
 
 	@DatabaseField(canBeNull=true, foreign=true, columnName="nodeid")
 	private Node node ;
@@ -140,5 +172,45 @@ public class Event {
 
 	public void setNode(Node node) {
 		this.node = node;
+	}
+
+	public String getSnmp() {
+		return snmp;
+	}
+
+	public void setSnmp(String snmp) {
+		this.snmp = snmp;
+	}
+
+	public String getSnmpHost() {
+		return snmpHost;
+	}
+
+	public void setSnmpHost(String snmpHost) {
+		this.snmpHost = snmpHost;
+	}
+
+	public int getNodeId() {
+		return nodeId;
+	}
+
+	public void setNodeId(int nodeId) {
+		this.nodeId = nodeId;
+	}
+
+	public String getLogYN() {
+		return logYN;
+	}
+
+	public void setLogYN(String logYN) {
+		this.logYN = logYN;
+	}
+
+	public String getDisplayYN() {
+		return displayYN;
+	}
+
+	public void setDisplayYN(String displayYN) {
+		this.displayYN = displayYN;
 	}
 }

@@ -3,20 +3,27 @@ package com.zanclus.opennms.data.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.simpleframework.xml.Attribute;
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Root;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName="services")
+@Root(name="serviceType")
 public class Service {
 
 	@DatabaseField(id=true)
+	@Attribute(name="id")
 	private long id ;
 
 	@DatabaseField(canBeNull=false)
+	@Element(name="name")
 	private String name ;
 
 	@DatabaseField(foreign=true)
-	private List<InterfaceServices> ifServices = new ArrayList<InterfaceServices>() ;
+	private List<InterfaceService> ifServices = new ArrayList<InterfaceService>() ;
 
 	public Service() {
 		// Default constructor for ORM-lite
@@ -38,11 +45,11 @@ public class Service {
 		this.name = name;
 	}
 
-	public List<InterfaceServices> getIfServices() {
+	public List<InterfaceService> getIfServices() {
 		return ifServices;
 	}
 
-	public void setIfServices(List<InterfaceServices> ifServices) {
+	public void setIfServices(List<InterfaceService> ifServices) {
 		this.ifServices = ifServices;
 	}
 }
