@@ -1,141 +1,193 @@
 package com.zanclus.opennms.data.entities;
 
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Root;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName="assetrecords")
+@Root(name="assetRecord")
 public class AssetRecord {
 
 	@DatabaseField(id=true, columnName="nodeid")
+	@Element(required=false, name="node")
 	private long nodeId ;
 
-	@DatabaseField
-	private String addr1 ;
+	@DatabaseField(columnName="assetnumber", canBeNull=true)
+	@Element(required=false)
+	private String assetNumber ;
 
-	@DatabaseField
-	private String addr2 ;
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
+	private String address1 ;
 
-	@DatabaseField
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
+	private String address2 ;
+
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
 	private String autoenable ;
 
-	@DatabaseField
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
 	private String building ;
 
-	@DatabaseField
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
 	private String category ;
 
-	@DatabaseField
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
 	private String circuitId ;
 
-	@DatabaseField
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
 	private String city ;
 
-	@DatabaseField
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
 	private String comment ;
 
-	@DatabaseField
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
 	private String connection ;
 
-	@DatabaseField
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
 	private String dateInstalled ;
 
-	@DatabaseField
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
 	private String department ;
 
-	@DatabaseField
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
 	private String description ;
 
-	@DatabaseField
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
 	private String displayCategory ;
 
-	@DatabaseField
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
 	private String division ;
 
-	@DatabaseField
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
 	private String enable ;
 
-	@DatabaseField
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
 	private String floor ;
 
-	@DatabaseField
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
 	private String lastModifiedBy ;
 
-	@DatabaseField
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
 	private String lastModifiedDate ;
 
-	@DatabaseField
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
 	private String lease ;
 
-	@DatabaseField
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
 	private String leaseExpires ;
 
-	@DatabaseField
-	private String maintContractExpires ;
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
+	private String maintContractExpiration ;
 
-	@DatabaseField
-	private String maintContractNum ;
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
+	private String maintContractNumber ;
 
-	@DatabaseField
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
 	private String modelNumber ;
 
-	@DatabaseField
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
 	private String manufacturer ;
 
-	@DatabaseField
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
 	private String notifyCategory ;
 
-	@DatabaseField
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
 	private String operatingSystem ;
 
-	@DatabaseField
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
 	private String password ;
 
-	@DatabaseField
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
 	private String pollerCategory ;
 
-	@DatabaseField
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
 	private String port ;
 
-	@DatabaseField
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
 	private String rack ;
 
-	@DatabaseField
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
 	private String region ;
 
-	@DatabaseField
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
 	private String room ;
 
-	@DatabaseField
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
 	private String serialNumber ;
 
-	@DatabaseField
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
 	private String slot ;
 
-	@DatabaseField
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
 	private String state ;
 
-	@DatabaseField
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
 	private String supportPhone ;
 
-	@DatabaseField
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
 	private String thresholdCategory ;
 
-	@DatabaseField
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
 	private String username ;
 
-	@DatabaseField
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
 	private String vendor ;
 
-	@DatabaseField
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
 	private String vendorAssetNumber ;
 
-	@DatabaseField
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
 	private String vendorFax ;
 
-	@DatabaseField
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
 	private String vendorPhone ;
 
-	@DatabaseField
+	@DatabaseField(canBeNull=true)
+	@Element(required=false)
 	private String zip ;
 
 	public AssetRecord() {
@@ -151,19 +203,19 @@ public class AssetRecord {
 	}
 
 	public String getAddr1() {
-		return addr1;
+		return address1;
 	}
 
 	public void setAddr1(String addr1) {
-		this.addr1 = addr1;
+		this.address1 = addr1;
 	}
 
 	public String getAddr2() {
-		return addr2;
+		return address2;
 	}
 
 	public void setAddr2(String addr2) {
-		this.addr2 = addr2;
+		this.address2 = addr2;
 	}
 
 	public String getAutoenable() {
@@ -311,19 +363,19 @@ public class AssetRecord {
 	}
 
 	public String getMaintContractExpires() {
-		return maintContractExpires;
+		return maintContractExpiration;
 	}
 
 	public void setMaintContractExpires(String maintContractExpires) {
-		this.maintContractExpires = maintContractExpires;
+		this.maintContractExpiration = maintContractExpires;
 	}
 
 	public String getMaintContractNum() {
-		return maintContractNum;
+		return maintContractNumber;
 	}
 
 	public void setMaintContractNum(String maintContractNum) {
-		this.maintContractNum = maintContractNum;
+		this.maintContractNumber = maintContractNum;
 	}
 
 	public String getModelNumber() {
@@ -492,5 +544,13 @@ public class AssetRecord {
 
 	public void setZip(String zip) {
 		this.zip = zip;
+	}
+
+	public String getAssetNumber() {
+		return assetNumber;
+	}
+
+	public void setAssetNumber(String assetNumber) {
+		this.assetNumber = assetNumber;
 	}
 }

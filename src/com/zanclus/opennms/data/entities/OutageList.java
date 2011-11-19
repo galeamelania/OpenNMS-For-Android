@@ -16,7 +16,7 @@ public class OutageList {
 	@Attribute(name="count")
 	private int count ;
 
-	@ElementList(name="outages")
+	@ElementList(name="outages", inline=true)
 	private List<Outage> outages = new ArrayList<Outage>() ;
 
 	public int getTotalCount() {

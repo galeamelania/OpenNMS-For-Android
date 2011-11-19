@@ -1,8 +1,5 @@
 package com.zanclus.opennms.data.entities;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
@@ -10,46 +7,55 @@ import org.simpleframework.xml.Root;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-@DatabaseTable(tableName="services")
-@Root(name="serviceType")
+@DatabaseTable(tableName="interfaceservice")
+@Root(name="service")
 public class Service {
 
-	@DatabaseField(id=true)
-	@Attribute(name="id")
-	private long id ;
+	@DatabaseField(columnName="id")
+	@Attribute
+	private int id ;
 
-	@DatabaseField(canBeNull=false)
-	@Element(name="name")
-	private String name ;
+	@DatabaseField(columnName="status")
+	@Attribute
+	private String status ;
 
-	@DatabaseField(foreign=true)
-	private List<InterfaceService> ifServices = new ArrayList<InterfaceService>() ;
+	@DatabaseField(columnName="ipifaceid")
+	@Element
+	private int ipInterfaceId ;
 
-	public Service() {
-		// Default constructor for ORM-lite
-	}
+	@DatabaseField(columnName="servicetype")
+	@Element
+	private ServiceType serviceType ;
 
-	public long getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public String getStatus() {
+		return status;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
-	public List<InterfaceService> getIfServices() {
-		return ifServices;
+	public int getIpInterfaceId() {
+		return ipInterfaceId;
 	}
 
-	public void setIfServices(List<InterfaceService> ifServices) {
-		this.ifServices = ifServices;
+	public void setIpInterfaceId(int ipInterfaceId) {
+		this.ipInterfaceId = ipInterfaceId;
+	}
+
+	public ServiceType getServiceType() {
+		return serviceType;
+	}
+
+	public void setServiceType(ServiceType serviceType) {
+		this.serviceType = serviceType;
 	}
 }

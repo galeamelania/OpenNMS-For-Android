@@ -17,7 +17,7 @@ public class InterfaceService {
 
 	@DatabaseField(foreign=true)
 	@Element(name="service")
-	private Service service ;
+	private ServiceType service ;
 
 	@DatabaseField(foreign=true, columnName="ipifaceid")
 	@Element(name="ipInterfaceId")
@@ -39,11 +39,11 @@ public class InterfaceService {
 		this.id = id;
 	}
 
-	public Service getService() {
+	public ServiceType getService() {
 		return service;
 	}
 
-	public void setService(Service service) {
+	public void setService(ServiceType service) {
 		this.service = service;
 	}
 

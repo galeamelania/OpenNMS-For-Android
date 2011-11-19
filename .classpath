@@ -38,8 +38,5 @@
 			<attribute name="javadoc_location" value="file:/home/dphillips/Development/Java/simple-xml-2.6.2/javadoc/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="libs/stax-1.2.0.jar"/>
-	<classpathentry kind="lib" path="libs/stax-api-1.0.1.jar"/>
-	<classpathentry kind="lib" path="libs/xpp3-1.1.3_8.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

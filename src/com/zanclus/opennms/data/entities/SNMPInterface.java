@@ -1,63 +1,95 @@
 package com.zanclus.opennms.data.entities;
 
+import org.simpleframework.xml.Attribute;
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Root;
+import org.simpleframework.xml.convert.Convert;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.zanclus.opennms.data.converters.DateConverter;
 
 @DatabaseTable
+@Root(name="snmpInterface")
 public class SNMPInterface {
 
 	@DatabaseField(columnName="id", id=true)
+	@Attribute(name="id")
 	private long snmpId ;
 
 	@DatabaseField
+	@Attribute
 	private String poll ;
 
 	@DatabaseField(columnName="pollflag")
+	@Attribute
 	private String pollFlag ;
 
 	@DatabaseField(columnName="ifindex")
+	@Attribute
 	private Integer ifIndex ;
 
 	@DatabaseField
+	@Attribute
 	private String collect ;
 
 	@DatabaseField(columnName="collectflag")
+	@Attribute
 	private String collectFlag ;
 
 	@DatabaseField(columnName="ifadminstatus")
+	@Element
 	private Integer ifAdminStatus ;
 
 	@DatabaseField(columnName="ifalias")
+	@Element(required=false)
 	private String ifAlias ;
 
 	@DatabaseField(columnName="ifdescription")
+	@Element(name="ifDescr")
 	private String ifDescription ;
 
 	@DatabaseField(columnName="ifname")
+	@Element
 	private String ifName ;
 
 	@DatabaseField(columnName="ifoperstatus")
+	@Element(name="ifOperStatus")
 	private Integer ifOperatorStatus ;
 
 	@DatabaseField(columnName="ifspeed")
+	@Element
 	private Integer ifSpeed ;
 
 	@DatabaseField(columnName="iftype")
+	@Element
 	private Integer ifType ;
 
-	@DatabaseField(columnName="ipinterface")
-	private Integer ipInterface ;
+	@DatabaseField(columnName="ipaddr")
+	@Element
+	private String ipAddress ;
+
+	@DatabaseField(columnName="ipinterfaces")
+	@Element
+	private Integer ipInterfaces ;
 	
 	@DatabaseField(columnName="lastpoll")
-	private Integer lastPoll ;
+	@Element(name="lastCapsdPoll", required=false)
+	@Convert(DateConverter.class)
+	private Long lastPoll ;
 	
-	@DatabaseField
-	private String netmask ;
+	@DatabaseField(columnName="netmask")
+	@Element
+	private String netMask ;
 	
 	@DatabaseField(foreign=true, canBeNull=true)
 	private Node node ;
 
+	@Element
+	private int nodeId ;
+
 	@DatabaseField(columnName="macaddr")
+	@Element(name="physAddr", required=false)
 	private String macAddress ;
 
 	public SNMPInterface() {
@@ -169,27 +201,27 @@ public class SNMPInterface {
 	}
 
 	public Integer getIpInterface() {
-		return ipInterface;
+		return ipInterfaces;
 	}
 
 	public void setIpInterface(Integer ipInterface) {
-		this.ipInterface = ipInterface;
+		this.ipInterfaces = ipInterface;
 	}
 
-	public Integer getLastPoll() {
+	public Long getLastPoll() {
 		return lastPoll;
 	}
 
-	public void setLastPoll(Integer lastPoll) {
+	public void setLastPoll(Long lastPoll) {
 		this.lastPoll = lastPoll;
 	}
 
-	public String getNetmask() {
-		return netmask;
+	public String getNetMask() {
+		return netMask;
 	}
 
-	public void setNetmask(String netmask) {
-		this.netmask = netmask;
+	public void setNetMask(String netMask) {
+		this.netMask = netMask;
 	}
 
 	public Node getNode() {
@@ -206,5 +238,21 @@ public class SNMPInterface {
 
 	public void setMacAddress(String macAddress) {
 		this.macAddress = macAddress;
+	}
+
+	public String getIpAddress() {
+		return ipAddress;
+	}
+
+	public void setIpAddress(String ipAddress) {
+		this.ipAddress = ipAddress;
+	}
+
+	public int getNodeId() {
+		return nodeId;
+	}
+
+	public void setNodeId(int nodeId) {
+		this.nodeId = nodeId;
 	}
 }

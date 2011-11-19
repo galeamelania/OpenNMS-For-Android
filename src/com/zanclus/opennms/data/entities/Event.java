@@ -3,9 +3,11 @@ package com.zanclus.opennms.data.entities;
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
+import org.simpleframework.xml.convert.Convert;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.zanclus.opennms.data.converters.DateConverter;
 
 @DatabaseTable(tableName="events")
 @Root(name="event")
@@ -23,14 +25,15 @@ public class Event {
 
 	@DatabaseField(columnName="createtime")
 	@Element(name="createTime")
-	private long createTime ;
+	@Convert(DateConverter.class)
+	private Long createTime ;
 
 	@DatabaseField
 	@Element(name="description")
 	private String description;
 
 	@DatabaseField(columnName="nmshost")
-	@Element(name="host")
+	@Element(name="host", required=false)
 	private String onmsHost ;
 
 	@DatabaseField(columnName="logmessage")
@@ -43,14 +46,15 @@ public class Event {
 
 	@DatabaseField
 	@Element(name="time")
-	private long time ;
+	@Convert(DateConverter.class)
+	private Long time ;
 
 	@DatabaseField
 	@Element(name="uei")
 	private String uei ;
 
 	@DatabaseField(columnName="ipaddress")
-	@Element(name="ipAddress")
+	@Element(name="ipAddress", required=false)
 	private String ipAddress ;
 
 	@DatabaseField
@@ -58,7 +62,7 @@ public class Event {
 	private String severity ;
 
 	@DatabaseField
-	@Element(name="parms")
+	@Element(name="parms", required=false)
 	private String parms ;
 
 	@Element(name="snmp", required=false)
@@ -67,8 +71,8 @@ public class Event {
 	@Element(name="snmpHost", required=false)
 	private String snmpHost ;
 
-	@Element(name="nodeId")
-	@DatabaseField(columnName="nodeid")
+	@Element(name="nodeId", required=false)
+	@DatabaseField(columnName="nodeid", canBeNull=true)
 	private int nodeId ;
 
 	@DatabaseField(canBeNull=true, foreign=true, columnName="nodeid")
@@ -86,11 +90,11 @@ public class Event {
 		this.id = id;
 	}
 
-	public long getCreateTime() {
+	public Long getCreateTime() {
 		return createTime;
 	}
 
-	public void setCreateTime(long createTime) {
+	public void setCreateTime(Long createTime) {
 		this.createTime = createTime;
 	}
 
@@ -126,11 +130,11 @@ public class Event {
 		this.source = source;
 	}
 
-	public long getTime() {
+	public Long getTime() {
 		return time;
 	}
 
-	public void setTime(long time) {
+	public void setTime(Long time) {
 		this.time = time;
 	}
 
