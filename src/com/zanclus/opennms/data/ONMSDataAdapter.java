@@ -3,19 +3,15 @@ package com.zanclus.opennms.data;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import com.j256.ormlite.dao.Dao;
 import com.zanclus.opennms.data.entities.Category;
 import com.zanclus.opennms.data.entities.IPInterface;
-import com.zanclus.opennms.data.entities.InterfaceService;
 import com.zanclus.opennms.data.entities.Node;
 import com.zanclus.opennms.data.entities.NodeCategories;
 import com.zanclus.opennms.data.entities.Service;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.SQLException;
@@ -384,23 +380,7 @@ public class ONMSDataAdapter {
 	 * @return A {@link List} of {@link Service} objects containing the details about the services associated with the given interface ID
 	 */
 	public List<Service> getServicesForInterface(int ifId) {
-		try {
-			Dao<IPInterface, Integer> intfDao = dbHelper.getIPInterfaceDao() ;
-			IPInterface iface = intfDao.queryForId(ifId) ;
-			if (iface!=null) {
-				List<InterfaceService> ifServices = iface.getServices() ;
-				if (ifServices!=null) {
-					if (ifServices.size()>0) {
-						ArrayList<Service> services = new ArrayList<Service>() ;
-						for (InterfaceService ifService: ifServices) {
-							services.add(ifService.getService()) ;
-						}
-					}
-				}
-			}
-		} catch (java.sql.SQLException e) {
-			Log.e("ONMSDataAdapter","SQLException while attempting to retreive IPInterface", e) ;
-		}
+		// TODO Stubbed method
 		return null ;
 	}
 
