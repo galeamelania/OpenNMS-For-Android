@@ -33,7 +33,7 @@ public class NodeList {
 		return nodes.size() ;
 	}
 
-	public List<Node> getAlarms() {
+	public List<Node> getNodes() {
 		return nodes;
 	}
 

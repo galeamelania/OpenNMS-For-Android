@@ -1,5 +1,6 @@
 package com.zanclus.opennms.data;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,12 +10,16 @@ import org.json.JSONObject;
 import com.j256.ormlite.dao.Dao;
 import com.zanclus.opennms.data.entities.Category;
 import com.zanclus.opennms.data.entities.IPInterface;
+import com.zanclus.opennms.data.entities.IPInterfaceList;
+import com.zanclus.opennms.data.entities.InterfaceService;
 import com.zanclus.opennms.data.entities.Node;
 import com.zanclus.opennms.data.entities.NodeCategories;
+import com.zanclus.opennms.data.entities.NodeList;
 import com.zanclus.opennms.data.entities.Service;
+import com.zanclus.opennms.data.entities.ServiceList;
+
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -51,153 +56,40 @@ public class ONMSDataAdapter {
 	}
 
 	/**
-	 * Given a JSON object which contains a collection of node data, add the nodes to the database.
-	 * @param nodeData A {@link JSONObject} containing a collection of node information
+	 * Given a {@link NodeList} object which contains a collection of node data, add the nodes to the database.
+	 * @param nodeData A {@link NodeList} containing a collection of node information
 	 */
-	public void addNodes(JSONObject nodeData) {
+	public void addNodes(NodeList nodeData) {
+
+		Dao<Node, Integer> nodeDao = null ;
 		try {
-			int nodeCount = nodeData.getInt("count") ;
-			JSONArray nodes = nodeData.getJSONArray("nodes") ;
+			nodeDao = dbHelper.getNodeDao() ;
+		} catch (SQLException sqle) {
+			Log.e("ONMSDataAdapter", "SQLException encountered while trying to retrieve Node DAO", sqle) ;
+		}
 
-			// Iterate through the node data and insert/update each node in the database
-			for (int x=0; x<nodeCount; x++) {
-				JSONObject nodeDetail = (JSONObject) nodes.get(x) ;
-				ContentValues values = new ContentValues() ;
-				long nodeId = nodeDetail.getInt("@id") ;
-				values.put("id", nodeId) ;
-				values.put("nodelabel", nodeDetail.has("@label")?nodeDetail.getString("@label"):null) ;
-				values.put("foreignsource", nodeDetail.has("@foreignSource")?nodeDetail.getString("@foreignSource"):null) ;
-				values.put("foreignid", nodeDetail.has("@foreignId")?nodeDetail.getInt("@foreignId"):null) ;
-				Date lastPollTime ;
-				if (nodeDetail.has("lastCapsdPoll")) {
-					lastPollTime = new Date(nodeDetail.getString("lastCapsdPoll"));
-				} else {
-					lastPollTime = null ;
-				}
-				values.put("lastpoll", lastPollTime==null?0:lastPollTime.getTime());
-
-				Date createTime ;
-				if (nodeDetail.has("createTime")) {
-					createTime = new Date(nodeDetail.getString("createTime"));
-				} else {
-					createTime = null ;
-				}
-				values.put("createtime", createTime==null?0:createTime.getTime());
-				values.put("syscontact", nodeDetail.has("sysContact")?nodeDetail.getString("sysContact"):null) ;
-				values.put("location", nodeDetail.has("sysLocation")?nodeDetail.getString("sysLocation"):null) ;
-				values.put("sysdescription", nodeDetail.has("sysDescription")?nodeDetail.getString("sysDescription"):null) ;
-				values.put("sysname", nodeDetail.has("sysName")?nodeDetail.getString("sysName"):null) ;
-				if (db.insertWithOnConflict("nodes", null, values, SQLiteDatabase.CONFLICT_REPLACE)<0) {
-					Log.e("ONMSDataAdapter","Failed to insert row with the following data: "+nodeDetail.toString(4)) ;
-				}
-
-				// If categories are associated with this node, store that in the categories and nodecategories tables
-				if (nodeData.has("categories")) {
-					JSONArray categories = nodeData.getJSONArray("categories") ;
-					int catCount = categories.length() ;
-					for (int y=0; y<catCount; y++) {
-						JSONObject category = categories.getJSONObject(y) ;
-						if (category.has("@id")) {
-							ContentValues catValues = new ContentValues() ;
-							ContentValues catNode = new ContentValues() ;
-							long catId = category.getInt("@id") ;
-							catValues.put("id", catId) ;
-							catValues.put("name", category.has("@name")?category.getString("@name"):null) ;
-							catNode.put("nodeid", nodeId) ;
-							catNode.put("category", catId) ;
-							if (db.insertWithOnConflict("categories", null, catValues, SQLiteDatabase.CONFLICT_IGNORE)<0) {
-								Log.e("ONMSDataAdapter","Failed to insert/update category with data: \n"+category.toString(4)) ;
-							}
-							if (db.insertWithOnConflict("nodecategories", null, catNode, SQLiteDatabase.CONFLICT_IGNORE)<0) {
-								Log.e("ONMSDataAdapter","Failed to insert/update node/category with data: \n"+category.toString(4)) ;
-							}
-						}
+		if (nodeDao!=null) {
+			for (Node next: nodeData.getNodes()) {
+				try {
+					if (nodeDao.update(next)==0) {
+						nodeDao.createIfNotExists(next) ;
 					}
-				}
-
-				// If asset information is associated with this node, store that in the assetrecord table and associate it with this node
-				if (nodeData.has("assetRecord")) {
-					JSONObject asset = nodeData.getJSONObject("assetRecord") ;
-					if (asset.has("node")) {
-						ContentValues assetVals = new ContentValues() ;
-						assetVals.put("nodeid", asset.getInt("node")) ;
-						assetVals.put("address1", asset.has("address1")?asset.getString("address1"):null) ;
-						assetVals.put("address2", asset.has("address2")?asset.getString("address2"):null) ;
-						assetVals.put("autoenable", asset.has("autoenable")?asset.getString("autoenable"):null) ;
-						assetVals.put("building", asset.has("building")?asset.getString("building"):null) ;
-						assetVals.put("category", asset.has("category")?asset.getString("category"):null) ;
-						assetVals.put("circuitid", asset.has("circuitId")?asset.getString("circuitId"):null) ;
-						assetVals.put("city", asset.has("city")?asset.getString("city"):null) ;
-						assetVals.put("comment", asset.has("comment")?asset.getString("comment"):null) ;
-						assetVals.put("connection", asset.has("connection")?asset.getString("connection"):null) ;
-						assetVals.put("dateinstalled", asset.has("dateInstalled")?asset.getString("dateInstalled"):null) ;
-						assetVals.put("department", asset.has("department")?asset.getString("department"):null) ;
-						assetVals.put("description", asset.has("description")?asset.getString("description"):null) ;
-						assetVals.put("displaycategory", asset.has("displayCategory")?asset.getString("displayCategory"):null) ;
-						assetVals.put("division", asset.has("division")?asset.getString("division"):null) ;
-						assetVals.put("enable", asset.has("enable")?asset.getString("enable"):null) ;
-						assetVals.put("floor", asset.has("floor")?asset.getString("floor"):null) ;
-						assetVals.put("lastmodifiedby", asset.has("lastModifiedBy")?asset.getString("lastModifiedBy"):null) ;
-						assetVals.put("lastmodifieddate", asset.has("lastModifiedDate")?asset.getString("lastModifiedDate"):null) ;
-						assetVals.put("lease", asset.has("lease")?asset.getString("lease"):null) ;
-						assetVals.put("leaseexpires", asset.has("leaseExpires")?asset.getString("leaseExpires"):null) ;
-						assetVals.put("maintcontractexpires", asset.has("maintContractExpiration")?asset.getString("maintContractExpiration"):null) ;
-						assetVals.put("maintcontractnumber", asset.has("maintContractNumber")?asset.getString("maintContractNumber"):null) ;
-						assetVals.put("modelnumber", asset.has("modelNumber")?asset.getString("modelNumber"):null) ;
-						assetVals.put("manufacturer", asset.has("manufacturer")?asset.getString("manufacturer"):null) ;
-						assetVals.put("notifycategory", asset.has("notifyCategory")?asset.getString("notifyCategory"):null) ;
-						assetVals.put("operatingsystem", asset.has("operatingSystem")?asset.getString("operatingSystem"):null) ;
-						assetVals.put("password", asset.has("password")?asset.getString("password"):null) ;
-						assetVals.put("pollercategory", asset.has("pollerCategory")?asset.getString("pollerCategory"):null) ;
-						assetVals.put("port", asset.has("port")?asset.getString("port"):null) ;
-						assetVals.put("rack", asset.has("rack")?asset.getString("rack"):null) ;
-						assetVals.put("region", asset.has("region")?asset.getString("region"):null) ;
-						assetVals.put("room", asset.has("room")?asset.getString("room"):null) ;
-						assetVals.put("serialnumber", asset.has("serialNumber")?asset.getString("serialNumber"):null) ;
-						assetVals.put("slot", asset.has("slot")?asset.getString("slot"):null) ;
-						assetVals.put("state", asset.has("state")?asset.getString("state"):null) ;
-						assetVals.put("supportphone", asset.has("supportPhone")?asset.getString("supportPhone"):null) ;
-						assetVals.put("threshcategory", asset.has("thresholdCategory")?asset.getString("thresholdCategory"):null) ;
-						assetVals.put("username", asset.has("username")?asset.getString("username"):null) ;
-						assetVals.put("vendor", asset.has("vendor")?asset.getString("vendor"):null) ;
-						assetVals.put("vendorassetnum", asset.has("vendorAssetNumber")?asset.getString("vendorAssetNumber"):null) ;
-						assetVals.put("vendorfax", asset.has("vendorFax")?asset.getString("vendorFax"):null) ;
-						assetVals.put("vendorphone", asset.has("vendorPhone")?asset.getString("vendorPhone"):null) ;
-						assetVals.put("zip", asset.has("zip")?asset.getString("zip"):null) ;
-						if (db.insertWithOnConflict("assetrecord", null, assetVals, SQLiteDatabase.CONFLICT_REPLACE)<0) {
-							Log.e("ONMSDataAdapter","Unable to insert/update asset record with data: \n"+asset.toString(4)) ;
-						}
-					}
+				} catch (SQLException sqle) {
+					Log.e("ONMSDataAdapter", "SQLException encountered while inserting/updating records", sqle) ;
 				}
 			}
-		} catch (JSONException jsone) {
-			Log.e("ONMSDataAdapter","JSONException occurred while trying to import node data.", jsone) ;
 		}
 	}
 
 	/**
-	 * Update a single node with the data from the {@link JSONObject}
-	 * @param nodeDetail A {@link JSONObject} containing details about a single node
+	 * Update a single node with the data from the {@link Node}
+	 * @param nodeDetail A {@link Node} containing details about a single node
 	 */
-	public void updateNode(JSONObject nodeDetail) {
+	public void updateNode(Node nodeDetail) {
 		try {
-			ContentValues values = new ContentValues() ;
-			values.put("@id", nodeDetail.getInt("id")) ;
-			values.put("nodelabel", nodeDetail.has("@label")?nodeDetail.getString("@label"):null) ;
-			values.put("foreignsource", nodeDetail.has("@foreignSource")?nodeDetail.getString("@foreignSource"):null) ;
-			values.put("foreignid", nodeDetail.has("@foreignId")?nodeDetail.getInt("@foreignId"):null) ;
-			Date lastPollTime ;
-			if (nodeDetail.has("lastCapsdPoll")) {
-				lastPollTime = new Date(nodeDetail.getString("lastCapsdPoll"));
-			} else {
-				lastPollTime = null ;
-			}
-			values.put("lastpoll", lastPollTime==null?0:lastPollTime.getTime());
-			if (db.insertWithOnConflict("nodes", null, values, SQLiteDatabase.CONFLICT_REPLACE)<0) {
-				Log.e("ONMSDataAdapter","Failed to update row with the following data: "+nodeDetail.toString(4)) ;
-			}
-		} catch (JSONException jsone) {
-			Log.e("ONMSDataAdapter","JSONException occurred while trying to read node data.", jsone) ;
+			dbHelper.getNodeDao().update(nodeDetail) ;
+		} catch (SQLException sqle) {
+			Log.e("ONMSDataAdapter","SQLException occurred while trying to update node data.", sqle) ;
 		}
 	}
 
@@ -206,7 +98,12 @@ public class ONMSDataAdapter {
 	 * @param nodeId The numeric ID for the node to retrieve data for
 	 * @return A {@link Node} containing the details about the specified node
 	 */
-	public Node getNodeById(long nodeId) {
+	public Node getNodeById(int nodeId) {
+		try {
+			return dbHelper.getNodeDao().queryForId(nodeId) ;
+		} catch (SQLException sqle) {
+			Log.e("ONMSDataAdapter","SQLException occurred while trying to retrieve node data.", sqle) ;
+		}
 		return null ;
 	}
 
@@ -226,102 +123,40 @@ public class ONMSDataAdapter {
 				}
 			}
 		} catch (java.sql.SQLException e) {
-			Log.e("ONMSDataAdapter","SQLException while attempting to create DAO for Node", e) ;
+			Log.e("ONMSDataAdapter","SQLException while attempting to retreive Node", e) ;
 		}
 		return null ;
 	}
 
 	/**
 	 * Insert a group of IP interface details into the database
-	 * @param intfData A {@link JSONObject} containing 1 or more sets of IP interface details
+	 * @param intfData A {@link IPInterfaceList} containing 1 or more sets of IP interface details
 	 */
-	public void insertIpInterfaces(JSONObject intfData) {
+	public void insertIpInterfaces(IPInterfaceList intfData) {
 		try {
-			int nodeCount = intfData.getInt("count") ;
-			JSONArray nodes = intfData.getJSONArray("nodes") ;
-			for (int x=0; x<nodeCount; x++) {
-				JSONObject intfDetail = (JSONObject) nodes.get(x) ;
-				ContentValues ipIfValues = new ContentValues() ;
-				int ipIfId = intfData.has("@id")?intfData.getInt("@id"):0 ; 
-				if (ipIfId>0) {
-					ipIfValues.put("id", ipIfId) ;
-					ipIfValues.put("nodeid", intfDetail.has("nodeId")?intfDetail.getInt("nodeId"):0) ;
-					ipIfValues.put("ipaddress", intfDetail.has("ipAddress")?intfDetail.getString("ipAddress"):null) ;
-					Date lastPoll = null ;
-					if (intfDetail.has("lastCapsdPoll")) {
-						lastPoll = new Date(intfDetail.getString("lastCapsdPoll")) ;
-					} else {
-						lastPoll = new Date(0) ;
-					}
-					ipIfValues.put("lastpoll", lastPoll.getTime()) ;
-					if (db.insertWithOnConflict("ipinterface", null, ipIfValues, SQLiteDatabase.CONFLICT_REPLACE)<0) {
-						Log.e("ONMSDataAdapter","Failed to update IP interface with data: \n"+intfDetail.toString(4)) ;
-					}
-
-					if (intfDetail.has("snmpInterface")) {
-						JSONObject snmpData = intfDetail.getJSONObject("snmpInterface") ;
-						if (snmpData.has("@id")) {
-							ContentValues snmpValues = new ContentValues() ;
-							snmpValues.put("id", snmpData.getInt("@id")) ;
-							snmpValues.put("poll", snmpData.has("@poll")?snmpData.getString("@poll"):null) ;
-							snmpValues.put("pollflag", snmpData.has("@pollFlag")?snmpData.getString("@pollFlag"):null) ;
-							snmpValues.put("ifindex", snmpData.has("@ifIndex")?snmpData.getInt("@ifIndex"):0) ;
-							snmpValues.put("collect", snmpData.has("@collect")?snmpData.getString("@collect"):null) ;
-							snmpValues.put("collectflag", snmpData.has("@collectFlag")?snmpData.getString("@collectFlag"):null) ;
-							snmpValues.put("ifadminstatus", snmpData.has("ifAdminStatus")?snmpData.getInt("ifAdminStatus"):0) ;
-							snmpValues.put("ifalias", snmpData.has("ifAlias")?snmpData.getString("ifAlias"):null) ;
-							snmpValues.put("ifdesc", snmpData.has("ifDescr")?snmpData.getString("ifDescr"):null) ;
-							snmpValues.put("ifname", snmpData.has("ifName")?snmpData.getString("ifName"):null) ;
-							snmpValues.put("ifoperstatus", snmpData.has("")?snmpData.getInt(""):0) ;
-							snmpValues.put("ifspeed", snmpData.has("ifOperStatus")?snmpData.getInt("ifOperStatus"):0) ;
-							snmpValues.put("iftype", snmpData.has("ifSpeed")?snmpData.getInt("ifSpeed"):0) ;
-							snmpValues.put("ipinterface", ipIfId) ;
-							Date lastSnmpPoll ;
-							if (snmpData.has("lastCapsdPoll")) {
-								lastSnmpPoll = new Date(snmpData.getString("lastCapsdPoll")) ;
-							} else {
-								lastSnmpPoll = new Date(0) ;
-							}
-							snmpValues.put("lastpoll", lastSnmpPoll.getTime()) ;
-							snmpValues.put("netmask", snmpData.has("netMask")?snmpData.getString("netMask"):null) ;
-							snmpValues.put("nodeid", snmpData.has("nodeId")?snmpData.getInt("nodeId"):0) ;
-							snmpValues.put("macaddress", snmpData.has("physAddr")?snmpData.getString("physAddr"):null) ;
-							if (db.insertWithOnConflict("snmpinterfaces", null, snmpValues, SQLiteDatabase.CONFLICT_REPLACE)<0) {
-								Log.e("ONMSDataAdapter","Failed to update SNMP interface with data: \n"+snmpData.toString(4)) ;
-							}
-						}
-					}
+			Dao<IPInterface, Integer> intDao = dbHelper.getIPInterfaceDao() ;
+			for (IPInterface next: intfData.getIPInterfaces()) {
+				if (intDao.update(next)==0) {
+					intDao.createIfNotExists(next) ;
 				}
 			}
-		} catch (JSONException jsone) {
-			Log.e("ONMSDataAdapter","JSONException occurred while trying to import node data.", jsone) ;
+		} catch (SQLException sqle) {
+			Log.e("ONMSDataAdapter","SQLException while attempting to load IPInterfaceList", sqle) ;
 		}
 	}
 
 	/**
-	 * Updates a single IP inteface with the data contained in the provided {@link JSONObject} 
-	 * @param ipIface A {@link JSONObject} containing details about a single IP interface
+	 * Updates a single IP inteface with the data contained in the provided {@link IPInterface} 
+	 * @param ipIface A {@link IPInterface} containing details about a single IP interface
 	 */
-	public void updateIpInterface(JSONObject ipIface) {
-		if (ipIface.has("@id")) {
-			try {
-				ContentValues ipIfValues = new ContentValues() ;
-				ipIfValues.put("id", ipIface.getInt("@id")) ;
-				ipIfValues.put("nodeid", ipIface.has("nodeId")?ipIface.getInt("nodeId"):0) ;
-				ipIfValues.put("ipaddress", ipIface.has("ipAddress")?ipIface.getString("ipAddress"):null) ;
-				Date lastPoll = null ;
-				if (ipIface.has("lastCapsdPoll")) {
-					lastPoll = new Date(ipIface.getString("lastCapsdPoll")) ;
-				} else {
-					lastPoll = new Date(0) ;
-				}
-				ipIfValues.put("lastpoll", lastPoll.getTime()) ;
-				if (db.insertWithOnConflict("ipinterface", null, ipIfValues, SQLiteDatabase.CONFLICT_REPLACE)<0) {
-					Log.e("ONMSDataAdapter","Failed to update IP interface with data: \n"+ipIface.toString(4)) ;
-				}
-			} catch (JSONException jsone) {
-				Log.e("ONMSDataAdapter","JSONException occurred while trying to update IP interface data.", jsone) ;
+	public void updateIpInterface(IPInterface ipIface) {
+		try {
+			Dao<IPInterface, Integer> intDao = dbHelper.getIPInterfaceDao() ;
+			if (intDao.update(ipIface)==0) {
+				intDao.createIfNotExists(ipIface) ;
 			}
+		} catch (SQLException sqle) {
+			Log.e("ONMSDataAdapter","SQLException while attempting to load IPInterfaceList", sqle) ;
 		}
 	}
 
@@ -367,11 +202,20 @@ public class ONMSDataAdapter {
 	}
 
 	/**
-	 * Associate services with an IP interface specified in the {@link JSONObject}
-	 * @param services A {@link JSONObject} containing details about services and their associated interface IDs
+	 * Associate services with an IP interface specified in the {@link ServiceList}
+	 * @param services A {@link ServiceList} containing details about services and their associated interface IDs
 	 */
-	public void addServicesForInterface(JSONObject services) {
-		//TODO: Stub Method
+	public void addServicesForInterface(ServiceList services) {
+		try {
+			Dao<Service, Integer> svcDao = dbHelper.getServiceDao() ;
+			for (Service next: services.getService()) {
+				if (svcDao.update(next)==0) {
+					svcDao.createIfNotExists(next) ;
+				}
+			}
+		} catch (SQLException sqle) {
+			Log.e("ONMSDataAdapter","SQLException while attempting to load ServiceList", sqle) ;
+		}
 	}
 
 	/**
@@ -380,7 +224,16 @@ public class ONMSDataAdapter {
 	 * @return A {@link List} of {@link Service} objects containing the details about the services associated with the given interface ID
 	 */
 	public List<Service> getServicesForInterface(int ifId) {
-		// TODO Stubbed method
+		try {
+			Dao<IPInterface, Integer> intDao = dbHelper.getIPInterfaceDao() ;
+			List<InterfaceService> list = intDao.queryForId(ifId).getServices() ;
+			// TODO Complete this method
+			for (InterfaceService item: list) {
+				
+			}
+		} catch (SQLException sqle) {
+			Log.e("ONMSDataAdapter","SQLException while attempting to load ServiceList", sqle) ;
+		}
 		return null ;
 	}
 
