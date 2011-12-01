@@ -9,7 +9,7 @@ import org.simpleframework.xml.Root;
 @Root(name="alarms")
 public class AlarmList {
 
-	@ElementList(name="alarm", inline=true)
+	@ElementList(name="alarm", inline=true, required=false)
 	private List<Alarm> alarms = new ArrayList<Alarm>() ;
 
 	@SuppressWarnings("unused")

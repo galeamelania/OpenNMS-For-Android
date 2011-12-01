@@ -15,7 +15,7 @@ public class EventList {
 	@Attribute(name="count")
 	private int count ;
 
-	@ElementList(name="event", inline=true)
+	@ElementList(name="event", inline=true, required=false)
 	private List<Event> event ;
 
 	public int getTotalCount() {

@@ -1,26 +1,31 @@
 package com.zanclus.opennms.activities;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.convert.AnnotationStrategy;
 import org.simpleframework.xml.core.Persister;
 import org.simpleframework.xml.strategy.Strategy;
-import com.j256.ormlite.android.apptools.OrmLiteBaseListActivity;
 import com.loopj.android.http.RequestParams;
+import com.zanclus.opennms.ConfigurationActivity;
 import com.zanclus.opennms.R;
-import com.zanclus.opennms.data.ORMDataHelper;
+import com.zanclus.opennms.data.entities.Event;
+import com.zanclus.opennms.data.entities.Node;
 import com.zanclus.opennms.data.entities.Outage;
 import com.zanclus.opennms.data.entities.OutageList;
-
+import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.http.AndroidHttpClient;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,57 +33,92 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
-public class OutagesActivity extends OrmLiteBaseListActivity<ORMDataHelper> {
+public class OutagesActivity extends Activity {
 
     protected RequestParams params = new RequestParams("ifRegainedService", "null") ;
 	protected List<Outage> outages = null ;
+	protected String authString = null ;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.outages) ;
 
-		ArrayList<String> params = new ArrayList<String>() ; 
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this) ;
+        if (sp.getString("onms.host", "").contentEquals("") || 
+        		sp.getString("onms.username","").contentEquals("") ||
+        		sp.getString("onms.password", "").contentEquals("") ||
+        		sp.getString("onms.port","").contentEquals("") ||
+        		sp.getString("onms.app_path","").contentEquals("")) {
+        	startActivity(new Intent(this, ConfigurationActivity.class)) ;
+        }
 
-		final ListView outageList = (ListView) findViewById(android.R.id.list) ;
+        String username = sp.getString("onms.username", "admin") ;
+        String password = sp.getString("onms.password", "admin") ;
+        String authTemp = username+":"+password ;
+        authString = Base64.encodeToString(authTemp.getBytes(), Base64.NO_WRAP) ;
+
+        String protocol = sp.getBoolean("onms.use_ssl", false)?"https":"http" ;
+        String baseUrl = protocol+"://"+sp.getString("onms.host", "opennms.org")+":"+sp.getString("onms.port", "8980")+sp.getString("onms.app_path", "/opennms") ;
+
+		StringBuilder params = new StringBuilder() ;
+		params.append(baseUrl+"/rest/outages|") ;
+		params.append(baseUrl+"/rest/nodes|") ;
+		params.append("limit=20|") ;
+
+		final ListView outageList = (ListView) findViewById(R.id.list) ;
 		AsyncTask<String, Void, OutageList> outageTask = new AsyncTask<String, Void, OutageList>() {
 
 			@Override
 			protected OutageList doInBackground(String... params) {
 				// Build a GET query string from the params
-				StringBuilder queryString = new StringBuilder() ;
-				for (int x=1; x<params.length; x++) {
-					if (x==0) {
-						queryString.append("?") ;
-					}
-					queryString.append(params[x]) ;
-					if ((x+1)!=params.length) {
-						queryString.append("?") ;
-					}
-				}
 
-				String url = params[0] + queryString.toString() ;
-				HttpClient client = new DefaultHttpClient() ;
+				String url = params[0].split("\\|")[0] + "?" + params[0].split("\\|")[2] ;
+				HttpClient client = AndroidHttpClient.newInstance("ONMSDroid") ;
 				HttpGet get = new HttpGet(url) ;
+				get.setHeader("Authorization", "Basic "+OutagesActivity.this.authString) ;
 				try {
+					Log.d("OutagesAcvtivity","Sending GET request '"+url+"'") ;
 					HttpResponse response = client.execute(get) ;
 					Strategy strategy = new AnnotationStrategy() ;
 					Serializer parser = new Persister(strategy) ;
-					OutageList list = parser.read(OutageList.class, response.getEntity().getContent()) ;
-					return list ;
+					HttpEntity entity = response.getEntity() ;
+					OutageList list = null ;
+					if (entity != null) {
+						list = parser.read(OutageList.class, entity.getContent()) ;
+						if (list!=null) {
+							outages = list.getOutages() ;
+							for (Outage outage : outages) {
+								if (outage != null) {
+									Event evt = outage.getServiceLostEvent();
+									int nodeId = evt.getNodeId();
+									url = params[0].split("\\|")[1] + "/" + nodeId;
+									get = new HttpGet(url);
+									Log.d("OutagesAcvtivity", "Sending GET request '" + url + "'");
+									get.setHeader("Authorization", "Basic "+OutagesActivity.this.authString);
+									response = client.execute(get);
+									Node node = parser.read(Node.class, response.getEntity().getContent());
+									evt.setNode(node);
+								}
+							}
+							return list ;
+						}
+					} else {
+						Log.e("OutagesActivity","HTTP Response entity was null.") ;
+					}
 				} catch (ClientProtocolException e) {
 					Log.e("OutagesActivity", "ClientProtocolException encountered while performing API request.", e) ;
 				} catch (IOException e) {
 					Log.e("OutagesActivity", "IOException encountered while performing API request.", e) ;
 				} catch (IllegalStateException e) {
-					Log.e("OutagesActivity", "IllegalStateException encountered while parsing XML response.", e) ;
+					Log.e("OutagesActivity", "IllegalStateException encountered reading HTTP(S) response", e) ;
 				} catch (Exception e) {
-					Log.e("OutagesActivity", "Exception encountered while  parsing XML response.", e) ;
+					Log.e("OutagesActivity", "Exception encountered while parsing XML response.", e) ;
 				}
 
-				return null;
+				return null ;
 			}
 
 			@Override
@@ -97,26 +137,34 @@ public class OutagesActivity extends OrmLiteBaseListActivity<ORMDataHelper> {
 						if (!LinearLayout.class.isInstance(convertView)) {
 							convertView = new LinearLayout(parent.getContext()) ;
 						}
-						String nodeAddr = outages.getOutages().get(position).getIpAddress() ;
+
+						String nodeLabel = outages.getOutages().get(position).getServiceLostEvent().getNode().getNodeLabel() ;
+						TextView name = new TextView(convertView.getContext()) ;
+						name.setText(nodeLabel) ;
+						((LinearLayout)convertView).addView(name) ;
+
+						String serviceName = outages.getOutages().get(position).getService().getServiceType().getName() ;
+						TextView service = new TextView(convertView.getContext()) ;
+						service.setText(serviceName) ;
+						((LinearLayout)convertView).addView(service) ;
+						
 						return null;
 					}
 					
 					@Override
 					public long getItemId(int position) {
-						// TODO Auto-generated method stub
-						return 0;
+						return outages.getOutages().get(position).getOutageId() ;
 					}
 					
 					@Override
 					public Object getItem(int position) {
-						// TODO Auto-generated method stub
-						return null;
+						return outages.getOutages().get(position) ;
 					}
 					
 					@Override
 					public int getCount() {
-						// TODO Auto-generated method stub
-						return 0;
+						Log.d("OutagesActivity","Number of outages: "+outages.getOutages().size()) ;
+						return outages.getOutages().size() ;
 					}
 				};
 
@@ -124,6 +172,6 @@ public class OutagesActivity extends OrmLiteBaseListActivity<ORMDataHelper> {
 			}
 		};
 
-		outageTask.execute((String[])params.toArray()) ;
+		outageTask.execute(params.toString()) ;
 	}
 }

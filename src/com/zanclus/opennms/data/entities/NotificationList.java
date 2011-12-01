@@ -15,7 +15,7 @@ public class NotificationList {
 	@Attribute(name="count")
 	private int count ;
 
-	@ElementList(name="notification", inline=true)
+	@ElementList(name="notification", inline=true, required=false)
 	private List<Notification> notification ;
 
 	public int getTotalCount() {

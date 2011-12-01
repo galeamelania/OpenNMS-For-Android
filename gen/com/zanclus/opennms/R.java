@@ -36,6 +36,7 @@ public final class R {
         public static final int semi_black=0x7f020002;
     }
     public static final class id {
+        public static final int list=0x7f08000a;
         public static final int logoArea=0x7f080000;
         public static final int mainMenu=0x7f080002;
         public static final int menuItemBusy=0x7f080004;

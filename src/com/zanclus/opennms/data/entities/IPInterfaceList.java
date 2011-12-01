@@ -9,7 +9,7 @@ import org.simpleframework.xml.Root;
 @Root(name="ipInterfaces")
 public class IPInterfaceList {
 
-	@ElementList(name="ipInterfaces", inline=true)
+	@ElementList(name="ipInterfaces", inline=true, required=false)
 	private List<IPInterface> ipInterfaces = new ArrayList<IPInterface>() ;
 
 	@SuppressWarnings("unused")
