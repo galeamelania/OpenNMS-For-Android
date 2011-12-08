@@ -29,4 +29,5 @@
     <string name="prefsPollCategoryLabel">Background Polling</string>
     <string name="onms_db_create_error_title">Error creating database for: </string>
     <string name="onms_db_create_error_message">An error was encountered while trying to create the database table. The message was: </string>
+    <string name="restServiceDescription">A Service which runs in the background to perform ReST requests/SQL lookups to front-end Activity classes</string>
 </resources>

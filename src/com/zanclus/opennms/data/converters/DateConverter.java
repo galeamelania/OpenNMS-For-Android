@@ -11,6 +11,8 @@ import org.simpleframework.xml.convert.Converter;
 import org.simpleframework.xml.stream.InputNode;
 import org.simpleframework.xml.stream.OutputNode;
 
+import android.util.Log;
+
 public class DateConverter implements Converter<Long> {
 
 	private DateTimeFormatter getFormatter(String dateTimeString) {
@@ -28,17 +30,17 @@ public class DateConverter implements Converter<Long> {
 				.appendSecondOfMinute(2) ;
 		if (dateTimeString!=null) {
 			if (dateTimeString.contains(".")) {
-				System.out.println("Date/Time has Microseconds") ;
+				Log.d("DateConverter","Date/Time has Microseconds") ;
 				builder.appendLiteral(".").appendMillisOfSecond(3) ;
 			}
 
 			if (dateTimeString.contains("Z")) {
-				System.out.println("Date/Time has a 'Z' literal.") ;
+				Log.d("DateConverter","Date/Time has a 'Z' literal.") ;
 				builder.appendLiteral("Z") ;
 			}
 
 			if (dateTimeString.contains("+")) {
-				System.out.println("Date/Time has '+' UTC offset") ;
+				Log.d("DateConverter","Date/Time has '+' UTC offset") ;
 				builder.appendTimeZoneOffset("+00:00", true, 2, 2) ;
 			}
 		}

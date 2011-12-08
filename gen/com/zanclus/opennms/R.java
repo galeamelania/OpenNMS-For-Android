@@ -83,6 +83,7 @@ public final class R {
         public static final int prefsUserSslTitle=0x7f07000a;
         public static final int prefsUsernameSummary=0x7f07000f;
         public static final int prefsUsernameTitle=0x7f07000e;
+        public static final int restServiceDescription=0x7f07001d;
         public static final int unkMenuOptionAlertTitle=0x7f070005;
         public static final int unkMenuOptionMsg=0x7f070006;
     }

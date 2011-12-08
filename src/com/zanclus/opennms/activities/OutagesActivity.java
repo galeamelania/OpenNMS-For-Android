@@ -80,7 +80,7 @@ public class OutagesActivity extends Activity {
 				HttpGet get = new HttpGet(url) ;
 				get.setHeader("Authorization", "Basic "+OutagesActivity.this.authString) ;
 				try {
-					Log.d("OutagesAcvtivity","Sending GET request '"+url+"'") ;
+					Log.d("OutagesActivity","Sending GET request '"+url+"'") ;
 					HttpResponse response = client.execute(get) ;
 					Strategy strategy = new AnnotationStrategy() ;
 					Serializer parser = new Persister(strategy) ;
@@ -90,19 +90,25 @@ public class OutagesActivity extends Activity {
 						list = parser.read(OutageList.class, entity.getContent()) ;
 						if (list!=null) {
 							outages = list.getOutages() ;
-							for (Outage outage : outages) {
+							for (int x=0; x<outages.size(); x++) {
+								Outage outage = outages.get(x) ;
+								Log.d("OutagesActivity","Processing outage ID: "+outage.getOutageId()) ;
 								if (outage != null) {
 									Event evt = outage.getServiceLostEvent();
 									int nodeId = evt.getNodeId();
 									url = params[0].split("\\|")[1] + "/" + nodeId;
 									get = new HttpGet(url);
-									Log.d("OutagesAcvtivity", "Sending GET request '" + url + "'");
+									Log.d("OutagesActivity", "Sending GET request '" + url + "'");
 									get.setHeader("Authorization", "Basic "+OutagesActivity.this.authString);
 									response = client.execute(get);
 									Node node = parser.read(Node.class, response.getEntity().getContent());
 									evt.setNode(node);
+									outage.setServiceLostEvent(evt) ;
 								}
+								outages.set(x, outage) ;
 							}
+							list.setOutages(outages) ;
+							Log.d("OutagesActivity","Return OutagesList object for post request processing.") ;
 							return list ;
 						}
 					} else {
@@ -124,6 +130,8 @@ public class OutagesActivity extends Activity {
 			@Override
 			protected void onPostExecute(OutageList result) {
 				super.onPostExecute(result);
+
+				Log.d("OutagesActivity","Got a result from the ReST request.") ;
 
 				final OutageList outages = result ;
 
@@ -148,7 +156,7 @@ public class OutagesActivity extends Activity {
 						service.setText(serviceName) ;
 						((LinearLayout)convertView).addView(service) ;
 						
-						return null;
+						return convertView ;
 					}
 					
 					@Override
@@ -168,10 +176,18 @@ public class OutagesActivity extends Activity {
 					}
 				};
 
+				Log.d("OutagesActivity","Setting up list view adapter.") ;
 				outageList.setAdapter(adapter) ;
+
+				Log.d("OutagesActivity","Invalidating list view.") ;
+				outageList.invalidate() ;
 			}
 		};
 
+		Log.d("OutagesActivity","Calling AsyncTask to perform ReST request.") ;
 		outageTask.execute(params.toString()) ;
+
+		Log.d("OutagesActivity","Calling AsyncTask to perform ReST request.") ;
+		outageList.invalidate() ;
 	}
 }
